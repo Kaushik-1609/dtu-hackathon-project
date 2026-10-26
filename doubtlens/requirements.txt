@@ -1,0 +1,9 @@
+# DoubtLens - Python Dependencies
+# Python 3.11 Stack for Hacktoberfest Hack Day Delhi x SKILLOP DTU Hackathon
+# Restricted strictly to authorized stack: Flask, flask-cors, google-genai, python-dotenv, gunicorn
+
+Flask>=3.0.0,<3.1.0
+flask-cors>=4.0.0,<4.1.0
+google-genai>=0.1.1
+python-dotenv>=1.0.0,<1.1.0
+gunicorn>=22.0.0,<23.0.0
