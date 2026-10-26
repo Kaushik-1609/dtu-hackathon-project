@@ -1,15 +1,14 @@
 /**
- * DOUBTLENS — Multimodal STEM AI Problem Solver
- * Vanilla JS Application Controller
- * No external libraries | 100% Frozen API Contract Compliant
- * Hacktoberfest Hack Day Delhi x SKILLOP DTU (MLH)
+ * DOUBTLENS — Minimalist Developer-Platform Frontend Controller
+ * Strict Compliance with Frozen API Contract & Optimus Style
+ * Plain Vanilla JS | Zero External Libraries | Strict textContent Usage
  */
 
 'use strict';
 
 (function () {
   // ---------------------------------------------------------------------------
-  // Application State
+  // 1. STATE MANAGEMENT
   // ---------------------------------------------------------------------------
   const state = {
     selectedFile: null,
@@ -20,109 +19,103 @@
     language: 'en',
     level: 'simple',
     quizQuestions: [],
-    quizAnswers: {},
+    currentQuizIndex: 0,
     quizScore: 0,
-    isSpeaking: false,
-    loadingInterval: null
+    quizAnswers: {}
   };
 
-  // Sample doubts for quick 1-click testing
+  // Sample doubts for quick testing
   const SAMPLE_DOUBTS = {
-    newton: "A 5 kg wooden block is pulled horizontally across a rough surface with a force of 25 N. The coefficient of kinetic friction is 0.2. Calculate the frictional force and the resulting acceleration of the block using Newton's Second Law (F = ma).",
-    quadratic: "Find the roots of the quadratic equation 3x² - 5x + 2 = 0 using the quadratic formula. State the value of the discriminant (b² - 4ac) and describe the nature of the roots.",
-    photosynthesis: "Explain the light-dependent reactions of photosynthesis in the chloroplast thylakoid membrane. Describe the roles of Photosystem II, photolysis of water, electron transport, and ATP synthase.",
-    chemistry: "According to Le Chatelier's Principle, explain how increasing total pressure and decreasing temperature affects the equilibrium yield of ammonia in the Haber-Bosch reaction: N₂(g) + 3H₂(g) ⇌ 2NH₃(g) + 92 kJ."
+    newton: "A 5 kg wooden block is pulled across a rough horizontal surface with a force of 25 N. The coefficient of friction is 0.2. Calculate the acceleration of the block and state Newton's Second Law.",
+    quadratic: "Solve the quadratic equation 3x² - 5x + 2 = 0 using the quadratic formula. State the value of the discriminant (b² - 4ac) and describe the nature of the roots.",
+    photosynthesis: "Explain the light-dependent reactions of photosynthesis in the chloroplast thylakoid membrane, including photolysis of water, electron transport chain, and ATP synthesis."
   };
 
-  // Loading state cycling messages
-  const LOADING_MESSAGES = [
-    { title: "Gemma 4 is reading your doubt...", sub: "Extracting visual diagrams, math symbols, and core questions" },
-    { title: "Analyzing STEM concepts...", sub: "Mapping problem parameters to physical principles and formulas" },
-    { title: "Synthesizing step-by-step walkthrough...", sub: "Structuring intuitive explanation and exam takeaways via Gemini API" }
-  ];
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+  const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 
   // ---------------------------------------------------------------------------
-  // DOM Elements Cache
+  // 2. DOM CACHE
   // ---------------------------------------------------------------------------
   const DOM = {
-    // Health Pill
-    healthPill: document.getElementById('health-pill'),
-    healthText: document.getElementById('health-text'),
-    themeToggleBtn: document.getElementById('theme-toggle-btn'),
+    // Navigation
+    navToggle: document.getElementById('nav-toggle'),
+    mobileMenu: document.getElementById('mobile-menu'),
+    mobileNavLinks: document.querySelectorAll('.mobile-nav-link'),
 
-    // Toast
-    toast: document.getElementById('toast'),
-    toastIcon: document.getElementById('toast-icon'),
-    toastMessage: document.getElementById('toast-message'),
-    toastClose: document.getElementById('toast-close'),
+    // Error Box
+    errorBox: document.getElementById('error-box'),
+    errorMessage: document.getElementById('error-message'),
 
-    // Form & Inputs
+    // App Inputs
     form: document.getElementById('doubt-form'),
     dropzone: document.getElementById('dropzone'),
     imageInput: document.getElementById('image-input'),
     dropzoneEmpty: document.getElementById('dropzone-empty'),
     dropzonePreview: document.getElementById('dropzone-preview'),
-    previewImage: document.getElementById('preview-image'),
+    previewImg: document.getElementById('preview-img'),
     previewFilename: document.getElementById('preview-filename'),
     previewFilesize: document.getElementById('preview-filesize'),
     removeImageBtn: document.getElementById('remove-image-btn'),
     questionInput: document.getElementById('question-input'),
-    sampleChips: document.querySelectorAll('.sample-chip'),
+    sampleButtons: document.querySelectorAll('.sample-btn'),
     submitBtn: document.getElementById('submit-btn'),
 
-    // Loading Section
-    loadingSection: document.getElementById('loading-section'),
-    loadingStageText: document.getElementById('loading-stage-text'),
-    loadingSubText: document.getElementById('loading-sub-text'),
+    // Loading State
+    loadingState: document.getElementById('loading-state'),
 
     // Explanation Section
-    explanationSection: document.getElementById('explanation-section'),
-    explanationTopic: document.getElementById('explanation-topic'),
-    topicLangPill: document.getElementById('topic-lang-pill'),
-    topicLevelPill: document.getElementById('topic-level-pill'),
-    explanationText: document.getElementById('explanation-text'),
+    resultSection: document.getElementById('result-section'),
+    resultTopic: document.getElementById('result-topic'),
+    resultExplanation: document.getElementById('result-explanation'),
     stepsList: document.getElementById('steps-list'),
-    stepsCountBadge: document.getElementById('steps-count-badge'),
-    keyPointsList: document.getElementById('key-points-list'),
-    keypointsCountBadge: document.getElementById('keypoints-count-badge'),
-    speakBtn: document.getElementById('speak-btn'),
-    speakBtnText: document.getElementById('speak-btn-text'),
+    keyPointsGrid: document.getElementById('key-points-grid'),
     copyBtn: document.getElementById('copy-btn'),
     copyBtnText: document.getElementById('copy-btn-text'),
-    ctaTopicName: document.getElementById('cta-topic-name'),
     startQuizBtn: document.getElementById('start-quiz-btn'),
 
     // Quiz Section
     quizSection: document.getElementById('quiz-section'),
     quizLoading: document.getElementById('quiz-loading'),
-    quizLoadingTopic: document.getElementById('quiz-loading-topic'),
-    quizBoard: document.getElementById('quiz-board'),
-    quizTopicHeader: document.getElementById('quiz-topic-header'),
-    quizAnsweredCount: document.getElementById('quiz-answered-count'),
-    quizScoreCurrent: document.getElementById('quiz-score-current'),
+    quizCard: document.getElementById('quiz-card'),
+    quizCounter: document.getElementById('quiz-counter'),
     quizProgressFill: document.getElementById('quiz-progress-fill'),
-    quizQuestionsContainer: document.getElementById('quiz-questions-container'),
-    quizResultCard: document.getElementById('quiz-result-card'),
-    resultEmoji: document.getElementById('result-emoji'),
-    resultTitle: document.getElementById('result-title'),
-    resultFinalScore: document.getElementById('result-final-score'),
-    resultFeedbackMessage: document.getElementById('result-feedback-message'),
-    retakeQuizBtn: document.getElementById('retake-quiz-btn'),
-    newDoubtBtn: document.getElementById('new-doubt-btn'),
-    confettiCanvas: document.getElementById('confetti-canvas')
+    quizQuestionText: document.getElementById('quiz-question-text'),
+    quizOptionsList: document.getElementById('quiz-options-list'),
+    quizFeedbackBox: document.getElementById('quiz-feedback-box'),
+    feedbackBadge: document.getElementById('feedback-badge'),
+    feedbackWhyText: document.getElementById('feedback-why-text'),
+    quizNextRow: document.getElementById('quiz-next-row'),
+    quizNextBtn: document.getElementById('quiz-next-btn'),
+
+    // Final Score Card
+    quizScoreCard: document.getElementById('quiz-score-card'),
+    quizScoreTitle: document.getElementById('quiz-score-title'),
+    quizScoreMessage: document.getElementById('quiz-score-message'),
+    quizRetryBtn: document.getElementById('quiz-retry-btn'),
+    quizNewDoubtBtn: document.getElementById('quiz-new-doubt-btn'),
+
+    // Terminal Copy
+    copyTerminalBtn: document.getElementById('copy-terminal-btn'),
+    terminalCode: document.getElementById('terminal-code')
   };
 
   // ---------------------------------------------------------------------------
-  // Utility Functions
+  // 3. ERROR BOX UTILITIES
   // ---------------------------------------------------------------------------
-  function escapeHTML(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+  function showError(msg) {
+    if (!DOM.errorBox || !DOM.errorMessage) return;
+    DOM.errorMessage.textContent = msg; // Strict textContent
+    DOM.errorBox.style.display = 'flex';
+    DOM.errorBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideError() {
+    if (!DOM.errorBox) return;
+    DOM.errorBox.style.display = 'none';
+    if (DOM.errorMessage) {
+      DOM.errorMessage.textContent = '';
+    }
   }
 
   function formatBytes(bytes) {
@@ -133,112 +126,83 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  let toastTimer = null;
-  function showToast(message, type = 'info', duration = 4000) {
-    if (toastTimer) clearTimeout(toastTimer);
+  // ---------------------------------------------------------------------------
+  // 4. MOBILE NAVIGATION DRAWER
+  // ---------------------------------------------------------------------------
+  function initMobileMenu() {
+    if (!DOM.navToggle || !DOM.mobileMenu) return;
 
-    DOM.toastMessage.textContent = message;
-    DOM.toast.className = 'toast show';
-
-    if (type === 'error') {
-      DOM.toast.classList.add('toast-error');
-      DOM.toastIcon.textContent = '❌';
-    } else if (type === 'success') {
-      DOM.toast.classList.add('toast-success');
-      DOM.toastIcon.textContent = '✅';
-    } else {
-      DOM.toast.classList.add('toast-info');
-      DOM.toastIcon.textContent = '💡';
+    function openMenu() {
+      DOM.navToggle.setAttribute('aria-expanded', 'true');
+      DOM.mobileMenu.classList.add('active');
+      DOM.mobileMenu.setAttribute('aria-hidden', 'false');
     }
 
-    toastTimer = setTimeout(() => {
-      DOM.toast.classList.remove('show');
-    }, duration);
-  }
+    function closeMenu() {
+      DOM.navToggle.setAttribute('aria-expanded', 'false');
+      DOM.mobileMenu.classList.remove('active');
+      DOM.mobileMenu.setAttribute('aria-hidden', 'true');
+    }
 
-  if (DOM.toastClose) {
-    DOM.toastClose.addEventListener('click', () => {
-      DOM.toast.classList.remove('show');
-      if (toastTimer) clearTimeout(toastTimer);
+    DOM.navToggle.addEventListener('click', () => {
+      const isExpanded = DOM.navToggle.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close on any mobile link click
+    DOM.mobileNavLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        closeMenu();
+      });
+    });
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && DOM.mobileMenu.classList.contains('active')) {
+        closeMenu();
+      }
     });
   }
 
   // ---------------------------------------------------------------------------
-  // Theme Toggle Management
+  // 5. IMAGE UPLOAD & DROPZONE HANDLING
   // ---------------------------------------------------------------------------
-  function initTheme() {
-    const savedTheme = localStorage.getItem('doubtlens-theme') || 'theme-dark';
-    document.body.className = savedTheme;
+  function setFile(file) {
+    hideError();
 
-    if (DOM.themeToggleBtn) {
-      DOM.themeToggleBtn.addEventListener('click', () => {
-        const isDark = document.body.classList.contains('theme-dark');
-        const newTheme = isDark ? 'theme-light' : 'theme-dark';
-        document.body.className = newTheme;
-        localStorage.setItem('doubtlens-theme', newTheme);
-      });
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Backend API Health Check
-  // ---------------------------------------------------------------------------
-  async function checkBackendHealth() {
-    try {
-      const response = await fetch('/api/health');
-      if (response.ok) {
-        const data = await response.json();
-        if (data && data.status === 'ok') {
-          DOM.healthPill.className = 'status-pill status-ok';
-          DOM.healthText.textContent = 'Backend Live';
-          return;
-        }
-      }
-      throw new Error('Non-ok response');
-    } catch (err) {
-      DOM.healthPill.className = 'status-pill status-down';
-      DOM.healthText.textContent = 'Offline / Standby';
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Image Upload, Drag-and-Drop, and Clipboard Handling
-  // ---------------------------------------------------------------------------
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB contract limit
-  const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
-
-  function handleFileSelection(file) {
     if (!file) return;
 
     if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      showToast('Please upload a valid image file (PNG, JPG, or WEBP).', 'error');
+      showError('Please upload a PNG, JPG, or WEBP image file.');
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      showToast('Image file exceeds 5 MB limit. Please select a smaller image.', 'error');
+      showError('The image exceeds the 5 MB limit. Please choose a smaller image.');
       return;
     }
 
     state.selectedFile = file;
 
-    // Generate preview
     const reader = new FileReader();
     reader.onload = (e) => {
-      DOM.previewImage.src = e.target.result;
-      DOM.previewFilename.textContent = file.name;
-      DOM.previewFilesize.textContent = formatBytes(file.size);
+      DOM.previewImg.src = e.target.result;
+      DOM.previewFilename.textContent = file.name; // Strict textContent
+      DOM.previewFilesize.textContent = formatBytes(file.size); // Strict textContent
       DOM.dropzoneEmpty.style.display = 'none';
       DOM.dropzonePreview.style.display = 'flex';
-      showToast('Problem image attached successfully!', 'success');
     };
     reader.readAsDataURL(file);
   }
 
-  function clearSelectedImage() {
+  function clearFile() {
     state.selectedFile = null;
     DOM.imageInput.value = '';
-    DOM.previewImage.src = '';
+    DOM.previewImg.src = '';
     DOM.previewFilename.textContent = '';
     DOM.previewFilesize.textContent = '';
     DOM.dropzonePreview.style.display = 'none';
@@ -246,13 +210,13 @@
   }
 
   function initDropzone() {
-    // Open file picker on click (unless clicking remove button)
+    if (!DOM.dropzone || !DOM.imageInput) return;
+
     DOM.dropzone.addEventListener('click', (e) => {
       if (e.target.closest('#remove-image-btn')) return;
       DOM.imageInput.click();
     });
 
-    // Keyboard navigation
     DOM.dropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -262,26 +226,27 @@
 
     DOM.imageInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files[0]) {
-        handleFileSelection(e.target.files[0]);
+        setFile(e.target.files[0]);
       }
     });
 
-    DOM.removeImageBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      clearSelectedImage();
-    });
+    if (DOM.removeImageBtn) {
+      DOM.removeImageBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearFile();
+      });
+    }
 
-    // Drag and Drop
-    ['dragenter', 'dragover'].forEach(eventType => {
-      DOM.dropzone.addEventListener(eventType, (e) => {
+    ['dragenter', 'dragover'].forEach(name => {
+      DOM.dropzone.addEventListener(name, (e) => {
         e.preventDefault();
         e.stopPropagation();
         DOM.dropzone.classList.add('drag-active');
       });
     });
 
-    ['dragleave', 'drop'].forEach(eventType => {
-      DOM.dropzone.addEventListener(eventType, (e) => {
+    ['dragleave', 'drop'].forEach(name => {
+      DOM.dropzone.addEventListener(name, (e) => {
         e.preventDefault();
         e.stopPropagation();
         DOM.dropzone.classList.remove('drag-active');
@@ -291,19 +256,18 @@
     DOM.dropzone.addEventListener('drop', (e) => {
       const files = e.dataTransfer.files;
       if (files && files.length > 0) {
-        handleFileSelection(files[0]);
+        setFile(files[0]);
       }
     });
 
-    // Clipboard Paste Listener (Ctrl+V / Cmd+V)
+    // Clipboard Paste Support (Ctrl+V / Cmd+V)
     window.addEventListener('paste', (e) => {
       const items = (e.clipboardData || e.originalEvent.clipboardData).items;
       for (const item of items) {
         if (item.type.indexOf('image') === 0) {
           const file = item.getAsFile();
           if (file) {
-            handleFileSelection(file);
-            showToast('Image pasted from clipboard!', 'success');
+            setFile(file);
             break;
           }
         }
@@ -312,71 +276,45 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Sample Doubts Chips
+  // 6. SAMPLE DOUBTS
   // ---------------------------------------------------------------------------
-  function initSampleDoubts() {
-    DOM.sampleChips.forEach(chip => {
-      chip.addEventListener('click', () => {
-        const sampleKey = chip.getAttribute('data-sample');
-        if (SAMPLE_DOUBTS[sampleKey]) {
-          DOM.questionInput.value = SAMPLE_DOUBTS[sampleKey];
+  function initSamples() {
+    DOM.sampleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-sample');
+        if (SAMPLE_DOUBTS[key]) {
+          DOM.questionInput.value = SAMPLE_DOUBTS[key];
+          hideError();
           DOM.questionInput.focus();
-          DOM.questionInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          showToast('Sample doubt loaded into question field!', 'info');
         }
       });
     });
   }
 
   // ---------------------------------------------------------------------------
-  // Form Submission (/api/explain)
+  // 7. EXPLAIN DOUBT FLOW (/api/explain)
   // ---------------------------------------------------------------------------
-  function startLoadingAnimation() {
-    DOM.loadingSection.style.display = 'block';
-    DOM.submitBtn.disabled = true;
-
-    let stepIndex = 0;
-    DOM.loadingStageText.textContent = LOADING_MESSAGES[0].title;
-    DOM.loadingSubText.textContent = LOADING_MESSAGES[0].sub;
-
-    state.loadingInterval = setInterval(() => {
-      stepIndex = (stepIndex + 1) % LOADING_MESSAGES.length;
-      DOM.loadingStageText.textContent = LOADING_MESSAGES[stepIndex].title;
-      DOM.loadingSubText.textContent = LOADING_MESSAGES[stepIndex].sub;
-    }, 2400);
-
-    DOM.loadingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  function stopLoadingAnimation() {
-    if (state.loadingInterval) {
-      clearInterval(state.loadingInterval);
-      state.loadingInterval = null;
-    }
-    DOM.loadingSection.style.display = 'none';
-    DOM.submitBtn.disabled = false;
-  }
-
   async function handleExplainSubmit(e) {
     e.preventDefault();
+    hideError();
 
-    const questionText = DOM.questionInput.value.trim();
+    const question = DOM.questionInput.value.trim();
     const hasImage = Boolean(state.selectedFile);
 
-    // Contract validation: At least one of image / question is required
-    if (!hasImage && !questionText) {
-      showToast('Please upload a problem photo or type a question to get started.', 'error');
+    // Client-side check: at least one of image or question is required
+    if (!hasImage && !question) {
+      showError('Please upload an image or type a question to get an explanation.');
       DOM.questionInput.focus();
       return;
     }
 
-    const languageInput = DOM.form.querySelector('input[name="language"]:checked');
-    const levelInput = DOM.form.querySelector('input[name="level"]:checked');
+    const langRadio = DOM.form.querySelector('input[name="language"]:checked');
+    const levelRadio = DOM.form.querySelector('input[name="level"]:checked');
 
-    const language = languageInput ? languageInput.value : 'en';
-    const level = levelInput ? levelInput.value : 'simple';
+    const language = langRadio ? langRadio.value : 'en';
+    const level = levelRadio ? levelRadio.value : 'simple';
 
-    // Build Multipart Form Data
+    // Prepare FormData
     const formData = new FormData();
     formData.append('language', language);
     formData.append('level', level);
@@ -384,478 +322,374 @@
     if (hasImage) {
       formData.append('image', state.selectedFile);
     }
-    if (questionText) {
-      formData.append('question', questionText);
+    if (question) {
+      formData.append('question', question);
     }
 
-    // Hide prior results
-    DOM.explanationSection.style.display = 'none';
+    // Set Loading State
+    DOM.submitBtn.disabled = true;
+    DOM.loadingState.style.display = 'block';
+    DOM.resultSection.style.display = 'none';
     DOM.quizSection.style.display = 'none';
-    stopSpeaking();
-
-    startLoadingAnimation();
 
     try {
+      // Frozen contract: POST /api/explain, do NOT set Content-Type manually
       const response = await fetch('/api/explain', {
         method: 'POST',
         body: formData
       });
 
-      const data = await response.json().catch(() => null);
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        throw new Error('Received an invalid response format from the server.');
+      }
 
-      if (!response.ok) {
-        const errorMsg = (data && data.error) ? data.error : `Request failed with status ${response.status}`;
+      if (!response.ok || (data && data.error)) {
+        const errorMsg = (data && data.error) ? data.error : `Server returned status ${response.status}.`;
         throw new Error(errorMsg);
       }
 
-      if (!data || !data.topic || !data.explanation) {
-        throw new Error('Received incomplete response structure from server.');
-      }
-
-      // Update State
-      state.topic = data.topic;
-      state.explanation = data.explanation;
+      // Success
+      state.topic = data.topic || 'Doubt Explanation';
+      state.explanation = data.explanation || '';
       state.steps = Array.isArray(data.steps) ? data.steps : [];
       state.keyPoints = Array.isArray(data.key_points) ? data.key_points : [];
       state.language = language;
       state.level = level;
 
       renderExplanation();
-      showToast('Doubt solved successfully!', 'success');
 
     } catch (err) {
-      console.error('Explain Error:', err);
-      showToast(err.message || 'Failed to explain problem. Please try again.', 'error');
+      showError(err.message || 'Unable to connect to the DoubtLens service. Please check your network.');
     } finally {
-      stopLoadingAnimation();
+      DOM.loadingState.style.display = 'none';
+      DOM.submitBtn.disabled = false;
     }
   }
 
   function renderExplanation() {
-    DOM.explanationTopic.textContent = state.topic;
-    DOM.ctaTopicName.textContent = state.topic;
-    DOM.topicLangPill.textContent = state.language === 'hi' ? '🇮🇳 हिन्दी' : '🇬🇧 English';
-    DOM.topicLevelPill.textContent = state.level === 'detailed' ? '🔬 Detailed' : '⚡ Simple';
+    // Strict textContent rendering
+    DOM.resultTopic.textContent = state.topic;
+    DOM.resultExplanation.textContent = state.explanation;
 
-    DOM.explanationText.textContent = state.explanation;
+    // Steps list rendering
+    DOM.stepsList.replaceChildren();
+    state.steps.forEach((step, index) => {
+      const li = document.createElement('li');
+      li.className = 'step-item';
 
-    // Render Steps
-    DOM.stepsList.innerHTML = '';
-    if (state.steps.length > 0) {
-      DOM.stepsCountBadge.textContent = `${state.steps.length} Steps`;
-      state.steps.forEach((step, index) => {
-        const stepCard = document.createElement('div');
-        stepCard.className = 'step-card';
-        stepCard.innerHTML = `
-          <div class="step-number">${index + 1}</div>
-          <div class="step-content">${escapeHTML(step)}</div>
-        `;
-        DOM.stepsList.appendChild(stepCard);
-      });
-    } else {
-      DOM.stepsCountBadge.textContent = '0 Steps';
-    }
+      const counter = document.createElement('span');
+      counter.className = 'step-counter';
+      counter.textContent = String(index + 1).padStart(2, '0');
 
-    // Render Key Points
-    DOM.keyPointsList.innerHTML = '';
-    if (state.keyPoints.length > 0) {
-      DOM.keypointsCountBadge.textContent = `${state.keyPoints.length} Points`;
-      state.keyPoints.forEach((point) => {
-        const pointCard = document.createElement('div');
-        pointCard.className = 'key-point-card';
-        pointCard.innerHTML = `
-          <span class="key-point-bullet" aria-hidden="true">🔑</span>
-          <span class="key-point-text">${escapeHTML(point)}</span>
-        `;
-        DOM.keyPointsList.appendChild(pointCard);
-      });
-    } else {
-      DOM.keypointsCountBadge.textContent = '0 Points';
-    }
+      const text = document.createElement('div');
+      text.className = 'step-text';
+      text.textContent = step; // Strict textContent
 
-    DOM.explanationSection.style.display = 'block';
-    DOM.explanationSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  // ---------------------------------------------------------------------------
-  // Speech Synthesis & Copy Features
-  // ---------------------------------------------------------------------------
-  function stopSpeaking() {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
-    state.isSpeaking = false;
-    DOM.speakBtn.classList.remove('speaking');
-    DOM.speakBtnText.textContent = 'Read Aloud';
-  }
-
-  function initSpeechAndCopy() {
-    // Read Aloud
-    DOM.speakBtn.addEventListener('click', () => {
-      if (!('speechSynthesis' in window)) {
-        showToast('Speech synthesis is not supported in this browser.', 'info');
-        return;
-      }
-
-      if (state.isSpeaking) {
-        stopSpeaking();
-        return;
-      }
-
-      const fullText = `${state.topic}. ${state.explanation}. ${state.steps.join('. ')}`;
-      const utterance = new SpeechSynthesisUtterance(fullText);
-      utterance.lang = state.language === 'hi' ? 'hi-IN' : 'en-US';
-      utterance.rate = 0.95;
-
-      utterance.onend = () => stopSpeaking();
-      utterance.onerror = () => stopSpeaking();
-
-      state.isSpeaking = true;
-      DOM.speakBtn.classList.add('speaking');
-      DOM.speakBtnText.textContent = 'Stop Listening';
-      window.speechSynthesis.speak(utterance);
+      li.appendChild(counter);
+      li.appendChild(text);
+      DOM.stepsList.appendChild(li);
     });
 
-    // Copy to Clipboard
+    // Key points rendering
+    DOM.keyPointsGrid.replaceChildren();
+    state.keyPoints.forEach(point => {
+      const card = document.createElement('div');
+      card.className = 'key-point-chip';
+      card.textContent = point; // Strict textContent
+      DOM.keyPointsGrid.appendChild(card);
+    });
+
+    DOM.resultSection.style.display = 'block';
+    DOM.resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---------------------------------------------------------------------------
+  // 8. COPY EXPLANATION
+  // ---------------------------------------------------------------------------
+  function initCopy() {
+    if (!DOM.copyBtn) return;
+
     DOM.copyBtn.addEventListener('click', async () => {
       const markdown = [
         `# ${state.topic}`,
         '',
-        `## Concept Explanation`,
         state.explanation,
         '',
-        `## Step-by-Step Breakdown`,
+        '## Steps',
         state.steps.map((s, i) => `${i + 1}. ${s}`).join('\n'),
         '',
-        `## Key Exam Points`,
+        '## Key Points',
         state.keyPoints.map(k => `- ${k}`).join('\n')
       ].join('\n');
 
       try {
         await navigator.clipboard.writeText(markdown);
-        DOM.copyBtnText.textContent = 'Copied! ✓';
-        showToast('Full explanation copied to clipboard as Markdown!', 'success');
+        DOM.copyBtnText.textContent = 'Copied!';
         setTimeout(() => {
-          DOM.copyBtnText.textContent = 'Copy';
-        }, 2200);
+          DOM.copyBtnText.textContent = 'Copy explanation';
+        }, 2000);
       } catch (err) {
-        showToast('Could not copy to clipboard.', 'error');
+        showError('Could not access clipboard.');
       }
     });
+
+    // Quickstart terminal copy
+    if (DOM.copyTerminalBtn && DOM.terminalCode) {
+      DOM.copyTerminalBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(DOM.terminalCode.textContent);
+          DOM.copyTerminalBtn.textContent = 'Copied!';
+          setTimeout(() => {
+            DOM.copyTerminalBtn.textContent = 'Copy';
+          }, 2000);
+        } catch (err) {
+          // ignore
+        }
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
-  // Interactive Quiz Flow (/api/quiz)
+  // 9. INTERACTIVE QUIZ FLOW (/api/quiz) — ONE QUESTION AT A TIME
   // ---------------------------------------------------------------------------
   async function handleStartQuiz() {
+    hideError();
+
     if (!state.topic || !state.explanation) {
-      showToast('Please solve a doubt first before testing yourself.', 'error');
+      showError('Please solve a doubt first before testing yourself.');
       return;
     }
 
     DOM.quizSection.style.display = 'block';
-    DOM.quizLoading.style.display = 'flex';
-    DOM.quizBoard.style.display = 'none';
-    DOM.quizResultCard.style.display = 'none';
-    DOM.quizLoadingTopic.textContent = state.topic;
+    DOM.quizLoading.style.display = 'block';
+    DOM.quizCard.style.display = 'none';
+    DOM.quizScoreCard.style.display = 'none';
 
     DOM.quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     try {
-      const payload = {
-        topic: state.topic,
-        explanation: state.explanation,
-        language: state.language
-      };
-
+      // Contract: POST /api/quiz with JSON body
       const response = await fetch('/api/quiz', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          topic: state.topic,
+          explanation: state.explanation,
+          language: state.language
+        })
       });
 
-      const data = await response.json().catch(() => null);
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        throw new Error('Received an invalid quiz format from the server.');
+      }
 
-      if (!response.ok) {
-        const errorMsg = (data && data.error) ? data.error : `Quiz request failed with status ${response.status}`;
+      if (!response.ok || (data && data.error)) {
+        const errorMsg = (data && data.error) ? data.error : `Quiz request failed with status ${response.status}.`;
         throw new Error(errorMsg);
       }
 
       if (!data || !Array.isArray(data.questions) || data.questions.length === 0) {
-        throw new Error('Received invalid quiz questions from server.');
+        throw new Error('Quiz data returned empty questions list.');
       }
 
       state.quizQuestions = data.questions;
-      state.quizAnswers = {};
+      state.currentQuizIndex = 0;
       state.quizScore = 0;
+      state.quizAnswers = {};
 
-      renderQuizBoard();
+      DOM.quizLoading.style.display = 'none';
+      renderCurrentQuestion();
 
     } catch (err) {
-      console.error('Quiz Error:', err);
-      showToast(err.message || 'Failed to generate quiz. Please try again.', 'error');
-      DOM.quizSection.style.display = 'none';
-    } finally {
       DOM.quizLoading.style.display = 'none';
+      DOM.quizSection.style.display = 'none';
+      showError(err.message || 'Unable to load practice quiz. Please try again.');
     }
   }
 
-  function renderQuizBoard() {
-    DOM.quizTopicHeader.textContent = `Quiz: ${state.topic}`;
-    DOM.quizAnsweredCount.textContent = '0';
-    DOM.quizScoreCurrent.textContent = '0';
-    DOM.quizProgressFill.style.width = '0%';
-    DOM.quizQuestionsContainer.innerHTML = '';
+  function renderCurrentQuestion() {
+    const qIndex = state.currentQuizIndex;
+    const total = state.quizQuestions.length;
+    const question = state.quizQuestions[qIndex];
 
-    const optionLabels = ['A', 'B', 'C', 'D'];
+    if (!question) return;
 
-    state.quizQuestions.forEach((qObj, qIdx) => {
-      const qCard = document.createElement('div');
-      qCard.className = 'card question-card';
-      qCard.id = `quiz-card-${qIdx}`;
+    // Update Counter & Progress
+    DOM.quizCounter.textContent = `Question ${qIndex + 1} of ${total}`;
+    const percent = Math.round(((qIndex + 1) / total) * 100);
+    DOM.quizProgressFill.style.width = `${percent}%`;
 
-      const metaRow = document.createElement('div');
-      metaRow.className = 'question-meta-row';
-      metaRow.innerHTML = `
-        <span class="q-badge">Question ${qIdx + 1} of 5</span>
-        <span class="q-status-badge unanswered" id="q-status-${qIdx}">Unanswered</span>
-      `;
-      qCard.appendChild(metaRow);
+    // Strict textContent for question
+    DOM.quizQuestionText.textContent = question.q;
 
-      const qText = document.createElement('h4');
-      qText.className = 'q-text';
-      qText.textContent = qObj.q;
-      qCard.appendChild(qText);
+    // Reset feedback and next button
+    DOM.quizFeedbackBox.style.display = 'none';
+    DOM.quizNextRow.style.display = 'none';
 
-      const optionsGrid = document.createElement('div');
-      optionsGrid.className = 'options-grid';
+    // Update next button label
+    if (qIndex === total - 1) {
+      DOM.quizNextBtn.textContent = 'View final score \u2192';
+    } else {
+      DOM.quizNextBtn.textContent = 'Next question \u2192';
+    }
 
-      qObj.options.forEach((optText, optIdx) => {
-        const optBtn = document.createElement('button');
-        optBtn.type = 'button';
-        optBtn.className = 'option-btn';
-        optBtn.setAttribute('data-qidx', qIdx);
-        optBtn.setAttribute('data-optidx', optIdx);
+    // Render Options
+    DOM.quizOptionsList.replaceChildren();
+    const letters = ['A', 'B', 'C', 'D'];
 
-        optBtn.innerHTML = `
-          <span class="opt-prefix">${optionLabels[optIdx] || optIdx + 1}</span>
-          <span class="opt-text">${escapeHTML(optText)}</span>
-        `;
+    question.options.forEach((optText, optIdx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quiz-option-btn';
 
-        optBtn.addEventListener('click', () => handleOptionSelect(qIdx, optIdx, qObj, qCard));
-        optionsGrid.appendChild(optBtn);
-      });
+      const letterSpan = document.createElement('span');
+      letterSpan.className = 'opt-letter';
+      letterSpan.textContent = letters[optIdx] || String(optIdx + 1);
 
-      qCard.appendChild(optionsGrid);
+      const textSpan = document.createElement('span');
+      textSpan.className = 'opt-text';
+      textSpan.textContent = optText; // Strict textContent
 
-      // Feedback / Why container (hidden initially)
-      const whyContainer = document.createElement('div');
-      whyContainer.className = 'why-card';
-      whyContainer.id = `q-why-${qIdx}`;
-      whyContainer.style.display = 'none';
-      whyContainer.innerHTML = `
-        <div class="why-header">💡 Why this is correct</div>
-        <div class="why-text">${escapeHTML(qObj.why)}</div>
-      `;
-      qCard.appendChild(whyContainer);
+      btn.appendChild(letterSpan);
+      btn.appendChild(textSpan);
 
-      DOM.quizQuestionsContainer.appendChild(qCard);
+      btn.addEventListener('click', () => handleOptionClick(optIdx));
+      DOM.quizOptionsList.appendChild(btn);
     });
 
-    DOM.quizBoard.style.display = 'block';
+    DOM.quizCard.style.display = 'block';
   }
 
-  function handleOptionSelect(qIdx, selectedOptIdx, qObj, qCard) {
-    if (state.quizAnswers[qIdx] !== undefined) return; // Already answered
+  function handleOptionClick(chosenIdx) {
+    const qIndex = state.currentQuizIndex;
+    if (state.quizAnswers[qIndex] !== undefined) return; // Locked
 
-    state.quizAnswers[qIdx] = selectedOptIdx;
+    const question = state.quizQuestions[qIndex];
+    state.quizAnswers[qIndex] = chosenIdx;
 
-    const isCorrect = (selectedOptIdx === qObj.answer_index);
+    const isCorrect = (chosenIdx === question.answer_index);
     if (isCorrect) {
       state.quizScore++;
     }
 
-    // Update Question Card UI
-    const statusBadge = qCard.querySelector(`#q-status-${qIdx}`);
-    const optionButtons = qCard.querySelectorAll('.option-btn');
-
-    optionButtons.forEach((btn, idx) => {
+    // Disable and colorize option buttons
+    const buttons = DOM.quizOptionsList.querySelectorAll('.quiz-option-btn');
+    buttons.forEach((btn, idx) => {
       btn.disabled = true;
 
-      if (idx === qObj.answer_index) {
-        btn.classList.add(isCorrect ? 'selected-correct' : 'revealed-correct');
-      } else if (idx === selectedOptIdx && !isCorrect) {
-        btn.classList.add('selected-wrong');
+      if (idx === question.answer_index) {
+        btn.classList.add('opt-correct');
+      } else if (idx === chosenIdx && !isCorrect) {
+        btn.classList.add('opt-wrong');
       }
     });
 
-    if (statusBadge) {
-      if (isCorrect) {
-        statusBadge.className = 'q-status-badge correct';
-        statusBadge.textContent = '✅ Correct';
-      } else {
-        statusBadge.className = 'q-status-badge incorrect';
-        statusBadge.textContent = '❌ Incorrect';
-      }
+    // Feedback badge & why text
+    if (isCorrect) {
+      DOM.feedbackBadge.className = 'feedback-badge badge-correct';
+      DOM.feedbackBadge.textContent = 'Correct';
+    } else {
+      DOM.feedbackBadge.className = 'feedback-badge badge-wrong';
+      DOM.feedbackBadge.textContent = 'Incorrect';
     }
 
-    // Reveal Why
-    const whyCard = qCard.querySelector(`#q-why-${qIdx}`);
-    if (whyCard) {
-      whyCard.style.display = 'block';
-    }
+    DOM.feedbackWhyText.textContent = question.why; // Strict textContent
+    DOM.quizFeedbackBox.style.display = 'block';
 
-    // Update Progress & Score
-    const answeredTotal = Object.keys(state.quizAnswers).length;
-    DOM.quizAnsweredCount.textContent = answeredTotal;
-    DOM.quizScoreCurrent.textContent = state.quizScore;
-    DOM.quizProgressFill.style.width = `${(answeredTotal / state.quizQuestions.length) * 100}%`;
+    // Reveal Next Button
+    DOM.quizNextRow.style.display = 'flex';
+  }
 
-    // If all questions are answered, show summary card
-    if (answeredTotal === state.quizQuestions.length) {
-      setTimeout(() => {
-        showQuizResults();
-      }, 500);
+  function handleNextQuestion() {
+    const total = state.quizQuestions.length;
+    if (state.currentQuizIndex < total - 1) {
+      state.currentQuizIndex++;
+      renderCurrentQuestion();
+    } else {
+      // Show Final Score Screen
+      showFinalScore();
     }
   }
 
-  function showQuizResults() {
+  function showFinalScore() {
+    DOM.quizCard.style.display = 'none';
+
     const score = state.quizScore;
     const total = state.quizQuestions.length;
 
-    DOM.resultFinalScore.textContent = score;
+    DOM.quizScoreTitle.textContent = `You scored ${score}/${total}`;
 
-    if (score === 5) {
-      DOM.resultEmoji.textContent = '🏆';
-      DOM.resultTitle.textContent = 'Perfect Score!';
-      DOM.resultFeedbackMessage.textContent = 'Outstanding conceptual mastery! You solved every single question correctly with zero hesitation.';
-      triggerConfetti();
-    } else if (score >= 4) {
-      DOM.resultEmoji.textContent = '🌟';
-      DOM.resultTitle.textContent = 'Excellent Mastery!';
-      DOM.resultFeedbackMessage.textContent = 'Great understanding! You have a solid grasp of the core STEM principles behind this doubt.';
-      triggerConfetti();
+    if (score === total) {
+      DOM.quizScoreMessage.textContent = 'Outstanding! You answered every question correctly and demonstrated complete mastery.';
     } else if (score >= 3) {
-      DOM.resultEmoji.textContent = '👍';
-      DOM.resultTitle.textContent = 'Good Effort!';
-      DOM.resultFeedbackMessage.textContent = 'You grasped the main ideas, but review the step-by-step breakdown above to polish the finer details.';
+      DOM.quizScoreMessage.textContent = 'Good effort! You understand the key concepts. Review the step breakdown above for any missed details.';
     } else {
-      DOM.resultEmoji.textContent = '📚';
-      DOM.resultTitle.textContent = 'Needs Revision';
-      DOM.resultFeedbackMessage.textContent = 'Take a moment to carefully re-read the steps and key takeaways above, then retake the quiz!';
+      DOM.quizScoreMessage.textContent = 'Take a moment to re-read the steps and key takeaways above, then try the quiz again.';
     }
 
-    DOM.quizResultCard.style.display = 'block';
-    DOM.quizResultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    DOM.quizScoreCard.style.display = 'block';
+    DOM.quizScoreCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // ---------------------------------------------------------------------------
-  // Pure JavaScript Confetti Engine (No external dependencies)
-  // ---------------------------------------------------------------------------
-  function triggerConfetti() {
-    const canvas = DOM.confettiCanvas;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-
-    const particles = [];
-    const colors = ['#38bdf8', '#818cf8', '#c084fc', '#ec4899', '#10b981', '#f59e0b'];
-
-    for (let i = 0; i < 70; i++) {
-      particles.push({
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        vx: (Math.random() - 0.5) * 14,
-        vy: (Math.random() - 0.7) * 14,
-        size: Math.random() * 8 + 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        rotation: Math.random() * 360,
-        vr: (Math.random() - 0.5) * 10,
-        alpha: 1
-      });
-    }
-
-    let animationFrame;
-    function render() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      let aliveCount = 0;
-
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.35; // Gravity
-        p.vx *= 0.98; // Friction
-        p.rotation += p.vr;
-        p.alpha -= 0.012;
-
-        if (p.alpha > 0) {
-          aliveCount++;
-          ctx.save();
-          ctx.translate(p.x, p.y);
-          ctx.rotate((p.rotation * Math.PI) / 180);
-          ctx.globalAlpha = Math.max(0, p.alpha);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
-          ctx.restore();
-        }
-      });
-
-      if (aliveCount > 0) {
-        animationFrame = requestAnimationFrame(render);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        cancelAnimationFrame(animationFrame);
-      }
-    }
-
-    render();
-  }
-
-  // ---------------------------------------------------------------------------
-  // Retake & New Doubt Handlers
-  // ---------------------------------------------------------------------------
   function initQuizActions() {
-    DOM.startQuizBtn.addEventListener('click', handleStartQuiz);
+    if (DOM.startQuizBtn) {
+      DOM.startQuizBtn.addEventListener('click', handleStartQuiz);
+    }
 
-    DOM.retakeQuizBtn.addEventListener('click', () => {
-      state.quizAnswers = {};
-      state.quizScore = 0;
-      DOM.quizResultCard.style.display = 'none';
-      renderQuizBoard();
-      DOM.quizBoard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    if (DOM.quizNextBtn) {
+      DOM.quizNextBtn.addEventListener('click', handleNextQuestion);
+    }
 
-    DOM.newDoubtBtn.addEventListener('click', () => {
-      clearSelectedImage();
-      DOM.questionInput.value = '';
-      DOM.explanationSection.style.display = 'none';
-      DOM.quizSection.style.display = 'none';
-      stopSpeaking();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      DOM.questionInput.focus();
-    });
+    if (DOM.quizRetryBtn) {
+      DOM.quizRetryBtn.addEventListener('click', () => {
+        state.currentQuizIndex = 0;
+        state.quizScore = 0;
+        state.quizAnswers = {};
+        DOM.quizScoreCard.style.display = 'none';
+        renderCurrentQuestion();
+        DOM.quizCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    if (DOM.quizNewDoubtBtn) {
+      DOM.quizNewDoubtBtn.addEventListener('click', () => {
+        clearFile();
+        DOM.questionInput.value = '';
+        DOM.resultSection.style.display = 'none';
+        DOM.quizSection.style.display = 'none';
+        hideError();
+        const trySection = document.getElementById('try');
+        if (trySection) {
+          trySection.scrollIntoView({ behavior: 'smooth' });
+        }
+        DOM.questionInput.focus();
+      });
+    }
   }
 
   // ---------------------------------------------------------------------------
-  // Application Bootstrap
+  // 10. BOOTSTRAP INITIALIZATION
   // ---------------------------------------------------------------------------
   function init() {
-    initTheme();
-    checkBackendHealth();
+    initMobileMenu();
     initDropzone();
-    initSampleDoubts();
-    initSpeechAndCopy();
+    initSamples();
+    initCopy();
     initQuizActions();
 
-    DOM.form.addEventListener('submit', handleExplainSubmit);
-
-    // Periodically re-verify health every 45s
-    setInterval(checkBackendHealth, 45000);
+    if (DOM.form) {
+      DOM.form.addEventListener('submit', handleExplainSubmit);
+    }
   }
 
-  // Run on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

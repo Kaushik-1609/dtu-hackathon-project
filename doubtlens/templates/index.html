@@ -3,543 +3,613 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DoubtLens — Multimodal STEM AI Problem Solver | Gemma 4</title>
-  <meta name="description" content="Instant step-by-step textbook and problem explanations in English and Hindi powered by Google Gemma 4 multimodal AI with auto-generated practice quizzes.">
-  <meta name="theme-color" content="#0b0f19">
+  <title>DoubtLens — AI Tutor Powered by Gemma 4</title>
+  <meta name="description" content="Instant step-by-step textbook and problem explanations in English and Hindi powered by Google Gemma 4 multimodal AI, with auto-generated practice quizzes.">
+  <meta name="theme-color" content="#ffffff">
 
-  <!-- Google Fonts: Outfit (display), Plus Jakarta Sans (body), JetBrains Mono (math/code) -->
+  <!-- Google Fonts: Inter (body & headings), JetBrains Mono (eyebrows & code), Noto Sans Devanagari (Hindi) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Main Stylesheet -->
-  <link rel="stylesheet" href="/static/style.css">
+  <!-- Stylesheet referenced with Flask url_for -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="theme-dark">
-  <!-- Toast Notification -->
-  <div id="toast" class="toast" role="alert" aria-live="polite">
-    <span class="toast-icon" id="toast-icon">⚠️</span>
-    <span class="toast-message" id="toast-message">Notification message</span>
-    <button type="button" class="toast-close" id="toast-close" aria-label="Close notification">&times;</button>
-  </div>
+<body>
 
-  <!-- Background Decorative Ambient Glows -->
-  <div class="ambient-glow glow-1" aria-hidden="true"></div>
-  <div class="ambient-glow glow-2" aria-hidden="true"></div>
-  <div class="ambient-glow glow-3" aria-hidden="true"></div>
+  <!-- Subtle Background Grid Pattern -->
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
 
-  <!-- Header -->
-  <header class="site-header">
-    <div class="container header-container">
-      <div class="brand">
-        <a href="/" class="brand-link" aria-label="DoubtLens Home">
-          <div class="brand-icon-wrapper">
-            <svg class="brand-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="14" cy="14" r="10" stroke="url(#brand-grad)" stroke-width="2.5" />
-              <path d="M21.5 21.5L28 28" stroke="url(#brand-grad)" stroke-width="3" stroke-linecap="round" />
-              <circle cx="14" cy="14" r="4.5" fill="url(#sparkle-grad)" opacity="0.85" />
-              <path d="M14 6V9M14 19V22M6 14H9M19 14H22" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round" />
-              <defs>
-                <linearGradient id="brand-grad" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#38bdf8" />
-                  <stop offset="0.5" stop-color="#818cf8" />
-                  <stop offset="1" stop-color="#c084fc" />
-                </linearGradient>
-                <linearGradient id="sparkle-grad" x1="9.5" y1="9.5" x2="18.5" y2="18.5" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#38bdf8" />
-                  <stop offset="1" stop-color="#818cf8" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <div class="brand-text">
-            <span class="brand-title">Doubt<span class="brand-highlight">Lens</span></span>
-            <span class="brand-tagline">Gemma 4 Multimodal STEM Tutor</span>
-          </div>
+  <!-- Sticky Navbar -->
+  <header class="navbar" id="top">
+    <div class="container navbar-container">
+      <a href="#top" class="brand" aria-label="DoubtLens Home">
+        <span class="brand-name">DoubtLens</span>
+        <span class="brand-tag">AI</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="nav-links" aria-label="Main Navigation">
+        <a href="#try" class="nav-link">Try it</a>
+        <a href="#how" class="nav-link">How it works</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#opensource" class="nav-link">Open source</a>
+      </nav>
+
+      <!-- Right Nav Actions -->
+      <div class="nav-actions">
+        <a href="#" class="nav-link nav-github" aria-label="GitHub Repository">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
         </a>
-      </div>
-
-      <div class="header-actions">
-        <!-- Backend API Health Pill -->
-        <div id="health-pill" class="status-pill status-checking" title="Backend API Health">
-          <span class="status-dot"></span>
-          <span class="status-text" id="health-text">Connecting...</span>
-        </div>
-
-        <!-- Hackathon Tag -->
-        <span class="badge hackathon-badge hide-mobile">
-          <span class="badge-dot"></span>
-          DTU &times; SKILLOP MLH
-        </span>
-
-        <!-- Theme Toggle -->
-        <button id="theme-toggle-btn" class="icon-button" type="button" aria-label="Toggle light/dark theme" title="Toggle theme">
-          <svg class="theme-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg class="theme-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
+        <a href="#try" class="btn btn-primary btn-sm">Try it now</a>
+        
+        <!-- Mobile Menu Toggle Button -->
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
         </button>
       </div>
     </div>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav class="mobile-nav-links">
+        <a href="#try" class="mobile-nav-link">Try it</a>
+        <a href="#how" class="mobile-nav-link">How it works</a>
+        <a href="#features" class="mobile-nav-link">Features</a>
+        <a href="#opensource" class="mobile-nav-link">Open source</a>
+        <div class="mobile-nav-divider"></div>
+        <a href="#" class="mobile-nav-link">GitHub</a>
+        <a href="#try" class="btn btn-primary btn-block">Try it now</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- Main Content Area -->
-  <main class="main-content">
-    <div class="container">
-
-      <!-- Hero Section -->
-      <section class="hero-section">
-        <div class="hero-badge-wrap">
-          <span class="hero-pill">
-            <svg class="pill-sparkle" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5L8 0Z" />
-            </svg>
-            Powered by Google Gemma 4 Multimodal AI
+  <main>
+    <!-- Section 1: Hero -->
+    <section class="section hero-section">
+      <div class="container hero-container">
+        
+        <div class="eyebrow-wrapper">
+          <span class="eyebrow">
+            <span class="eyebrow-line"></span>
+            AI tutor powered by Gemma 4
           </span>
         </div>
-        <h1 class="hero-title">
-          Snap any STEM Doubt.<br>
-          <span class="gradient-text">Understand every step.</span>
+
+        <h1 class="hero-headline">
+          <span class="hero-word">Snap</span>
+          <span class="hero-word">your</span>
+          <span class="hero-word">doubt.</span>
         </h1>
-        <p class="hero-subtitle">
-          Upload a textbook problem, diagram, or handwritten equation. Gemma 4 provides clear step-by-step intuition in English or Hindi, then generates a custom 5-question quiz to test your mastery.
+
+        <p class="hero-description">
+          Understand it. Test yourself. Upload a photo of any textbook page, problem or diagram and get a step-by-step explanation in English or Hindi, then a quick quiz.
         </p>
 
-        <!-- Feature Pills -->
-        <div class="feature-pills">
-          <div class="feature-pill">
-            <span class="fp-icon">📸</span>
-            <span>Textbook & Diagrams</span>
-          </div>
-          <div class="feature-pill">
-            <span class="fp-icon">✍️</span>
-            <span>Handwritten Math & Physics</span>
-          </div>
-          <div class="feature-pill">
-            <span class="fp-icon">🇮🇳</span>
-            <span>English & हिन्दी Modes</span>
-          </div>
-          <div class="feature-pill">
-            <span class="fp-icon">🎯</span>
-            <span>Instant Practice Quiz</span>
-          </div>
+        <div class="hero-cta-group">
+          <a href="#try" class="btn btn-primary btn-lg">Try it now</a>
+          <a href="#how" class="btn btn-secondary btn-lg">How it works</a>
         </div>
-      </section>
 
-      <!-- Input Form Card -->
-      <section class="card input-card" id="doubt-input-section">
-        <form id="doubt-form" novalidate>
-          <div class="form-grid">
-            
-            <!-- Left Column: Image Upload Area -->
-            <div class="upload-column">
-              <label class="section-label" for="image-input">
-                <span class="label-number">1</span>
-                <span>Upload Problem Photo</span>
-                <span class="label-optional">(Optional if text typed)</span>
-              </label>
+      </div>
+    </section>
 
-              <!-- Drag and Drop Zone -->
-              <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload problem image: Drag and drop or press Enter to browse">
-                <input type="file" id="image-input" name="image" accept="image/png,image/jpeg,image/webp" class="visually-hidden">
-                
-                <!-- Empty State -->
-                <div id="dropzone-empty" class="dropzone-empty">
-                  <div class="dropzone-icon-circle">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="dropzone-icon" aria-hidden="true">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                      <polyline points="21 15 16 10 5 21"></polyline>
+    <!-- Section 2: Scrolling Marquee Strip -->
+    <div class="marquee-strip" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="marquee-content">
+          <span>Maths</span><span class="marquee-dot">&bull;</span>
+          <span>Physics</span><span class="marquee-dot">&bull;</span>
+          <span>Chemistry</span><span class="marquee-dot">&bull;</span>
+          <span>Biology</span><span class="marquee-dot">&bull;</span>
+          <span>Code</span><span class="marquee-dot">&bull;</span>
+          <span>Diagrams</span><span class="marquee-dot">&bull;</span>
+          <span>Handwritten notes</span><span class="marquee-dot">&bull;</span>
+          <span>English</span><span class="marquee-dot">&bull;</span>
+          <span class="hindi-text">हिन्दी</span><span class="marquee-dot">&bull;</span>
+        </div>
+        <div class="marquee-content">
+          <span>Maths</span><span class="marquee-dot">&bull;</span>
+          <span>Physics</span><span class="marquee-dot">&bull;</span>
+          <span>Chemistry</span><span class="marquee-dot">&bull;</span>
+          <span>Biology</span><span class="marquee-dot">&bull;</span>
+          <span>Code</span><span class="marquee-dot">&bull;</span>
+          <span>Diagrams</span><span class="marquee-dot">&bull;</span>
+          <span>Handwritten notes</span><span class="marquee-dot">&bull;</span>
+          <span>English</span><span class="marquee-dot">&bull;</span>
+          <span class="hindi-text">हिन्दी</span><span class="marquee-dot">&bull;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: THE APP (Part A) -->
+    <section class="section app-section" id="try">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="eyebrow-wrapper">
+            <span class="eyebrow">
+              <span class="eyebrow-line"></span>
+              Try it
+            </span>
+          </div>
+          <h2 class="section-headline">Ask your doubt.</h2>
+        </div>
+
+        <!-- The App Panel -->
+        <div class="panel app-panel">
+          
+          <!-- Visible Error Box (hidden by default) -->
+          <div id="error-box" class="error-box" style="display: none;" role="alert">
+            <span class="error-indicator" aria-hidden="true">&times;</span>
+            <span id="error-message" class="error-message"></span>
+          </div>
+
+          <!-- Input Form -->
+          <form id="doubt-form" novalidate>
+            <div class="app-grid">
+              
+              <!-- Dropzone Upload Column -->
+              <div class="input-col">
+                <label class="input-label" for="image-input">
+                  Problem photo
+                  <span class="label-hint">PNG, JPG, WEBP &bull; Max 5 MB</span>
+                </label>
+
+                <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop problem image here or click to upload">
+                  <input type="file" id="image-input" name="image" accept="image/png,image/jpeg,image/webp" class="visually-hidden">
+
+                  <!-- Empty State -->
+                  <div id="dropzone-empty" class="dropzone-empty">
+                    <svg class="dropzone-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
                     </svg>
+                    <p class="dropzone-text">
+                      <span class="dropzone-highlight">Upload a file</span> or drag and drop
+                    </p>
+                    <p class="dropzone-subtext">Diagram, textbook page, or handwritten notes</p>
                   </div>
-                  <p class="dropzone-primary-text">
-                    <strong class="dropzone-browse-link">Choose an image</strong> or drag & drop
-                  </p>
-                  <p class="dropzone-secondary-text">
-                    PNG, JPG, WEBP &bull; Max 5 MB
-                  </p>
-                  <div class="paste-hint">
-                    <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste screenshot
-                  </div>
-                </div>
 
-                <!-- Preview State (Hidden by default) -->
-                <div id="dropzone-preview" class="dropzone-preview" style="display: none;">
-                  <div class="preview-media-wrapper">
-                    <img id="preview-image" src="" alt="Selected problem preview" class="preview-img">
-                  </div>
-                  <div class="preview-details">
-                    <div class="preview-meta">
-                      <span id="preview-filename" class="preview-filename">problem.png</span>
-                      <span id="preview-filesize" class="preview-filesize">0 KB</span>
+                  <!-- Live Preview State (Hidden by default) -->
+                  <div id="dropzone-preview" class="dropzone-preview" style="display: none;">
+                    <div class="preview-img-wrap">
+                      <img id="preview-img" src="" alt="Selected problem preview" class="preview-img">
                     </div>
-                    <button type="button" id="remove-image-btn" class="btn-remove" aria-label="Remove uploaded image" title="Remove image">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                        <line x1="14" y1="11" x2="14" y2="17"></line>
-                      </svg>
-                      <span>Remove</span>
-                    </button>
+                    <div class="preview-info-row">
+                      <div class="preview-meta">
+                        <span id="preview-filename" class="preview-filename">file.png</span>
+                        <span id="preview-filesize" class="preview-filesize">0 KB</span>
+                      </div>
+                      <button type="button" id="remove-image-btn" class="btn-text-danger" aria-label="Remove image">
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Right Column: Question Text & Quick Samples -->
-            <div class="text-column">
-              <label class="section-label" for="question-input">
-                <span class="label-number">2</span>
-                <span>Type or Refine Question</span>
-                <span class="label-optional">(Optional if image uploaded)</span>
-              </label>
-
-              <div class="textarea-wrapper">
+              <!-- Question Textarea Column -->
+              <div class="input-col">
+                <label class="input-label" for="question-input">
+                  Question or context
+                  <span class="label-hint">Optional if photo is uploaded</span>
+                </label>
                 <textarea 
                   id="question-input" 
                   name="question" 
                   rows="4" 
-                  class="question-textarea" 
-                  placeholder="e.g. A 5 kg block rests on an inclined plane of 30°. If the friction coefficient is 0.2, calculate the acceleration down the plane... or ask any question about the uploaded diagram."
+                  class="textarea" 
+                  placeholder="Type a question, formula or paste problem text..."
                 ></textarea>
-              </div>
 
-              <!-- Quick Sample Doubts -->
-              <div class="sample-doubts-wrapper">
-                <span class="samples-label">💡 Try quick sample doubts:</span>
-                <div class="samples-list" role="group" aria-label="Preset sample doubts">
-                  <button type="button" class="sample-chip" data-sample="newton">
-                    <span>⚡ Newton's 2nd Law</span>
-                  </button>
-                  <button type="button" class="sample-chip" data-sample="quadratic">
-                    <span>📐 Quadratic Formula</span>
-                  </button>
-                  <button type="button" class="sample-chip" data-sample="photosynthesis">
-                    <span>🌱 Photosynthesis</span>
-                  </button>
-                  <button type="button" class="sample-chip" data-sample="chemistry">
-                    <span>🧪 Le Chatelier's Principle</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Options & Submission Bar -->
-          <div class="form-footer">
-            <div class="form-options">
-              
-              <!-- Language Option -->
-              <div class="option-group">
-                <span class="option-label">Language:</span>
-                <div class="segmented-control" role="radiogroup" aria-label="Explanation Language">
-                  <label class="segmented-btn">
-                    <input type="radio" name="language" value="en" checked>
-                    <span class="segmented-content">
-                      <span class="lang-flag">🇬🇧</span> English
-                    </span>
-                  </label>
-                  <label class="segmented-btn">
-                    <input type="radio" name="language" value="hi">
-                    <span class="segmented-content">
-                      <span class="lang-flag">🇮🇳</span> हिन्दी
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Explanation Level Option -->
-              <div class="option-group">
-                <span class="option-label">Explanation Depth:</span>
-                <div class="segmented-control" role="radiogroup" aria-label="Explanation Level">
-                  <label class="segmented-btn">
-                    <input type="radio" name="level" value="simple" checked>
-                    <span class="segmented-content">
-                      <span>⚡ Simple & Intuitive</span>
-                    </span>
-                  </label>
-                  <label class="segmented-btn">
-                    <input type="radio" name="level" value="detailed">
-                    <span class="segmented-content">
-                      <span>🔬 Detailed Deep-Dive</span>
-                    </span>
-                  </label>
+                <!-- Quick Samples -->
+                <div class="samples-row">
+                  <span class="samples-title">Sample doubts:</span>
+                  <button type="button" class="sample-btn" data-sample="newton">Newton's 2nd Law</button>
+                  <button type="button" class="sample-btn" data-sample="quadratic">Quadratic Formula</button>
+                  <button type="button" class="sample-btn" data-sample="photosynthesis">Photosynthesis</button>
                 </div>
               </div>
 
             </div>
 
-            <!-- Submit Button -->
-            <div class="submit-wrap">
-              <button type="submit" id="submit-btn" class="btn-primary btn-submit">
-                <span class="btn-shine"></span>
-                <span class="btn-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                  </svg>
-                </span>
-                <span class="btn-text">Solve Doubt with Gemma 4</span>
-              </button>
-            </div>
-          </div>
-        </form>
-      </section>
+            <!-- Controls & Submit Bar -->
+            <div class="controls-bar">
+              <div class="toggles-group">
+                
+                <!-- Language Toggle -->
+                <div class="toggle-wrapper">
+                  <span class="toggle-label">Language:</span>
+                  <div class="segmented-control" role="radiogroup" aria-label="Explanation Language">
+                    <label class="segmented-item">
+                      <input type="radio" name="language" value="en" checked>
+                      <span>English</span>
+                    </label>
+                    <label class="segmented-item">
+                      <input type="radio" name="language" value="hi">
+                      <span class="hindi-text">हिन्दी</span>
+                    </label>
+                  </div>
+                </div>
 
-      <!-- Loading State Section -->
-      <section id="loading-section" class="card loading-card" style="display: none;" aria-live="polite">
-        <div class="scanner-container">
-          <div class="scanner-glow-bar"></div>
-          <div class="scanner-grid-lines"></div>
-          <div class="scanner-orb">
-            <svg class="orb-spin" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="20" cy="20" r="18" stroke="rgba(56, 189, 248, 0.2)" stroke-width="3" />
-              <path d="M20 2C29.9411 2 38 10.0589 38 20" stroke="url(#spinner-gradient)" stroke-width="3.5" stroke-linecap="round" />
-              <defs>
-                <linearGradient id="spinner-gradient" x1="20" y1="2" x2="38" y2="20" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#38bdf8" />
-                  <stop offset="1" stop-color="#a855f7" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-        </div>
-        <div class="loading-content">
-          <h2 class="loading-title" id="loading-stage-text">Gemma 4 is reading your doubt...</h2>
-          <p class="loading-subtitle" id="loading-sub-text">Inspecting visual cues, formulas, and conceptual logic via Gemini API</p>
-          <div class="loading-progress-dots">
-            <span class="p-dot"></span>
-            <span class="p-dot"></span>
-            <span class="p-dot"></span>
-          </div>
-        </div>
-      </section>
+                <!-- Level Toggle -->
+                <div class="toggle-wrapper">
+                  <span class="toggle-label">Level:</span>
+                  <div class="segmented-control" role="radiogroup" aria-label="Explanation Level">
+                    <label class="segmented-item">
+                      <input type="radio" name="level" value="simple" checked>
+                      <span>Simple</span>
+                    </label>
+                    <label class="segmented-item">
+                      <input type="radio" name="level" value="detailed">
+                      <span>Detailed</span>
+                    </label>
+                  </div>
+                </div>
 
-      <!-- Explanation Output Section -->
-      <section id="explanation-section" class="explanation-section" style="display: none;">
-        
-        <!-- Topic Header Banner -->
-        <div class="topic-header-card card">
-          <div class="topic-main">
-            <div class="topic-tag-wrap">
-              <span class="topic-badge-icon">🎯</span>
-              <span class="topic-badge-label">Topic Identified:</span>
-            </div>
-            <h2 id="explanation-topic" class="topic-title">Newton's Second Law</h2>
-          </div>
-          <div class="topic-actions">
-            <span id="topic-lang-pill" class="pill-meta">🇬🇧 English</span>
-            <span id="topic-level-pill" class="pill-meta">⚡ Simple</span>
-            <button type="button" id="speak-btn" class="btn-action" aria-label="Listen to explanation" title="Listen to explanation">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-              </svg>
-              <span id="speak-btn-text">Read Aloud</span>
-            </button>
-            <button type="button" id="copy-btn" class="btn-action" aria-label="Copy explanation to clipboard" title="Copy explanation">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-              <span id="copy-btn-text">Copy</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Core Concept Overview -->
-        <div class="card concept-card">
-          <div class="card-heading-row">
-            <div class="heading-with-icon">
-              <span class="heading-icon">💡</span>
-              <h3 class="card-section-title">Core Intuition & Explanation</h3>
-            </div>
-          </div>
-          <div class="concept-body">
-            <p id="explanation-text" class="explanation-paragraph">
-              <!-- Explanation paragraph populated dynamically -->
-            </p>
-          </div>
-        </div>
-
-        <!-- Step-by-Step Breakdown -->
-        <div class="card steps-card">
-          <div class="card-heading-row">
-            <div class="heading-with-icon">
-              <span class="heading-icon">📋</span>
-              <h3 class="card-section-title">Step-by-Step Solution</h3>
-            </div>
-            <span class="badge-count" id="steps-count-badge">4 Steps</span>
-          </div>
-          <div id="steps-list" class="steps-list">
-            <!-- Steps dynamically inserted here -->
-          </div>
-        </div>
-
-        <!-- Key Points & Formulae -->
-        <div class="card keypoints-card">
-          <div class="card-heading-row">
-            <div class="heading-with-icon">
-              <span class="heading-icon">🔑</span>
-              <h3 class="card-section-title">Key Points & Exam Takeaways</h3>
-            </div>
-            <span class="badge-count" id="keypoints-count-badge">3 Points</span>
-          </div>
-          <div id="key-points-list" class="key-points-grid">
-            <!-- Key points dynamically inserted here -->
-          </div>
-        </div>
-
-        <!-- Quiz Call to Action Banner -->
-        <div class="card quiz-cta-card" id="quiz-cta-banner">
-          <div class="cta-content">
-            <div class="cta-icon-badge">🎯</div>
-            <div class="cta-texts">
-              <h3 class="cta-title">Test Your Concept Mastery</h3>
-              <p class="cta-desc">
-                Challenge yourself with a 5-question multiple choice quiz generated by Gemma 4 tailored to <strong id="cta-topic-name">this topic</strong>.
-              </p>
-            </div>
-          </div>
-          <div class="cta-action">
-            <button type="button" id="start-quiz-btn" class="btn-primary btn-quiz-cta">
-              <span class="btn-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
-                </svg>
-              </span>
-              <span>Test Me (5 MCQs)</span>
-            </button>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- Quiz Section -->
-      <section id="quiz-section" class="quiz-section" style="display: none;" aria-live="polite">
-        
-        <!-- Quiz Loading Indicator -->
-        <div id="quiz-loading" class="card quiz-loading-card" style="display: none;">
-          <div class="scanner-orb">
-            <svg class="orb-spin" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="20" cy="20" r="18" stroke="rgba(168, 85, 247, 0.2)" stroke-width="3" />
-              <path d="M20 2C29.9411 2 38 10.0589 38 20" stroke="url(#quiz-spin-grad)" stroke-width="3.5" stroke-linecap="round" />
-              <defs>
-                <linearGradient id="quiz-spin-grad" x1="20" y1="2" x2="38" y2="20" gradientUnits="userSpaceOnUse">
-                  <stop stop-color="#a855f7" />
-                  <stop offset="1" stop-color="#38bdf8" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div>
-          <div class="loading-content">
-            <h3 class="loading-title">Generating 5-Question Quiz...</h3>
-            <p class="loading-subtitle">Gemma 4 is synthesizing target problems and explanations for <span id="quiz-loading-topic"></span></p>
-          </div>
-        </div>
-
-        <!-- Quiz Active Board -->
-        <div id="quiz-board" class="quiz-board" style="display: none;">
-          
-          <!-- Quiz Header & Progress Tracker -->
-          <div class="card quiz-header-card">
-            <div class="quiz-header-top">
-              <div class="quiz-header-title-wrap">
-                <span class="quiz-header-badge">Assessment</span>
-                <h3 id="quiz-topic-header" class="quiz-topic-title">Quiz: Topic Name</h3>
               </div>
-              <div class="quiz-stats-group">
-                <div class="quiz-counter" id="quiz-counter-text">
-                  Answered <strong id="quiz-answered-count">0</strong> of <strong>5</strong>
-                </div>
-                <div class="quiz-score-pill" id="quiz-score-pill">
-                  Score: <strong id="quiz-score-current">0</strong> / 5
-                </div>
+
+              <!-- Submit Button -->
+              <div class="submit-wrapper">
+                <button type="submit" id="submit-btn" class="btn btn-primary btn-explain">
+                  Explain it
+                </button>
               </div>
             </div>
+          </form>
 
-            <!-- Progress Bar -->
-            <div class="quiz-progress-track">
-              <div id="quiz-progress-fill" class="quiz-progress-fill" style="width: 0%;"></div>
+          <!-- Loading State (Part A.2) -->
+          <div id="loading-state" class="loading-state" style="display: none;" aria-live="polite">
+            <div class="spinner-wrap">
+              <span class="spinner" aria-hidden="true"></span>
             </div>
+            <p class="loading-title">Reading your doubt...</p>
+            <p class="loading-sub">Analyzing visual cues and problem logic with Gemma 4</p>
           </div>
 
-          <!-- Quiz Questions List Container -->
-          <div id="quiz-questions-container" class="quiz-questions-container">
-            <!-- 5 question cards rendered here -->
-          </div>
-
-          <!-- Quiz Result / Score Summary Card -->
-          <div id="quiz-result-card" class="card quiz-result-card" style="display: none;">
-            <!-- Canvas for pure JS Confetti (no external libraries) -->
-            <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+          <!-- Result Section (Part A.3) -->
+          <div id="result-section" class="result-section" style="display: none;">
             
-            <div class="result-badge-circle" id="result-badge-circle">
-              <span id="result-emoji" class="result-emoji">🏆</span>
+            <div class="result-header">
+              <div class="result-title-group">
+                <span class="result-eyebrow">Topic</span>
+                <h3 id="result-topic" class="result-topic">Newton's Second Law</h3>
+              </div>
+              <button type="button" id="copy-btn" class="btn btn-secondary btn-sm">
+                <span id="copy-btn-text">Copy explanation</span>
+              </button>
             </div>
-            <h3 class="result-title" id="result-title">Quiz Completed!</h3>
-            <div class="result-score-display">
-              <span class="result-score-big" id="result-final-score">5</span>
-              <span class="result-score-denom">/ 5</span>
-            </div>
-            <p class="result-feedback-message" id="result-feedback-message">
-              Outstanding work! You demonstrated complete conceptual mastery of this topic.
-            </p>
 
-            <div class="result-actions">
-              <button type="button" id="retake-quiz-btn" class="btn-secondary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polyline points="1 4 1 10 7 10"></polyline>
-                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-                </svg>
-                <span>Retake Quiz</span>
+            <!-- Explanation Paragraph -->
+            <div class="result-block">
+              <p id="result-explanation" class="result-explanation"></p>
+            </div>
+
+            <!-- Numbered Steps -->
+            <div class="result-block">
+              <h4 class="block-title">Step-by-step breakdown</h4>
+              <ol id="steps-list" class="steps-list">
+                <!-- Dynamically populated via textContent -->
+              </ol>
+            </div>
+
+            <!-- Key Points Chips/Cards -->
+            <div class="result-block">
+              <h4 class="block-title">Key takeaways</h4>
+              <div id="key-points-grid" class="key-points-grid">
+                <!-- Dynamically populated via textContent -->
+              </div>
+            </div>
+
+            <!-- "Test me" CTA (Part A.4) -->
+            <div class="test-me-bar">
+              <div class="test-me-info">
+                <h4 class="test-me-heading">Ready to check your understanding?</h4>
+                <p class="test-me-desc">Gemma 4 will generate a 5-question multiple choice quiz on this topic.</p>
+              </div>
+              <button type="button" id="start-quiz-btn" class="btn btn-primary">
+                Test me
               </button>
-              <button type="button" id="new-doubt-btn" class="btn-primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                <span>Ask Another Doubt</span>
-              </button>
+            </div>
+
+          </div>
+
+          <!-- Interactive Quiz Section (Part A.4 - One question at a time) -->
+          <div id="quiz-section" class="quiz-section" style="display: none;" aria-live="polite">
+            
+            <!-- Quiz Loading Indicator -->
+            <div id="quiz-loading" class="quiz-loading" style="display: none;">
+              <span class="spinner" aria-hidden="true"></span>
+              <p class="loading-title">Generating 5 practice questions...</p>
+            </div>
+
+            <!-- Active Question Card -->
+            <div id="quiz-card" class="quiz-card" style="display: none;">
+              
+              <div class="quiz-top-bar">
+                <div class="quiz-meta">
+                  <span class="quiz-badge">Concept check</span>
+                  <span id="quiz-counter" class="quiz-counter">Question 1 of 5</span>
+                </div>
+                <div class="quiz-progress-track">
+                  <div id="quiz-progress-fill" class="quiz-progress-fill" style="width: 20%;"></div>
+                </div>
+              </div>
+
+              <!-- Question Text -->
+              <h3 id="quiz-question-text" class="quiz-question-text">Question text goes here?</h3>
+
+              <!-- Options List (A, B, C, D) -->
+              <div id="quiz-options-list" class="quiz-options-list">
+                <!-- Generated dynamically -->
+              </div>
+
+              <!-- Answer Feedback & Why Box -->
+              <div id="quiz-feedback-box" class="quiz-feedback-box" style="display: none;">
+                <div class="feedback-status-row">
+                  <span id="feedback-badge" class="feedback-badge">Correct</span>
+                </div>
+                <p id="feedback-why-text" class="feedback-why-text"></p>
+              </div>
+
+              <!-- Next Question / View Score Button -->
+              <div id="quiz-next-row" class="quiz-next-row" style="display: none;">
+                <button type="button" id="quiz-next-btn" class="btn btn-primary">
+                  Next question &rarr;
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Final Score Summary Card -->
+            <div id="quiz-score-card" class="quiz-score-card" style="display: none;">
+              <span class="score-eyebrow">Assessment complete</span>
+              <h3 id="quiz-score-title" class="score-title">You scored 5/5</h3>
+              <p id="quiz-score-message" class="score-message">Great job! You demonstrated a complete grasp of this concept.</p>
+              
+              <div class="score-actions">
+                <button type="button" id="quiz-retry-btn" class="btn btn-secondary">Try again</button>
+                <button type="button" id="quiz-new-doubt-btn" class="btn btn-primary">Ask another doubt</button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 4: Process (id="how") -->
+    <section class="section process-section" id="how">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="eyebrow-wrapper">
+            <span class="eyebrow">
+              <span class="eyebrow-line"></span>
+              Process
+            </span>
+          </div>
+          <h2 class="section-headline">Three steps. One clear answer.</h2>
+        </div>
+
+        <div class="process-grid">
+          
+          <!-- Steps List -->
+          <div class="process-steps">
+            
+            <div class="step-row">
+              <div class="step-num">I</div>
+              <div class="step-body">
+                <h3 class="step-title">Snap your doubt</h3>
+                <p class="step-desc">Take a photo of the page, problem or diagram, or just type it.</p>
+              </div>
+            </div>
+
+            <div class="step-row">
+              <div class="step-num">II</div>
+              <div class="step-body">
+                <h3 class="step-title">Understand it</h3>
+                <p class="step-desc">Get a step-by-step explanation in simple English or Hindi.</p>
+              </div>
+            </div>
+
+            <div class="step-row">
+              <div class="step-num">III</div>
+              <div class="step-body">
+                <h3 class="step-title">Test yourself</h3>
+                <p class="step-desc">Take a 5-question quiz to check you really got it.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Code Style Sample Panel -->
+          <div class="code-panel-wrapper">
+            <div class="code-panel">
+              <div class="code-panel-header">
+                <div class="code-window-dots" aria-hidden="true">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+                <span class="code-filename">doubtlens.json</span>
+                <div class="code-status">
+                  <span class="status-indicator-dot" aria-hidden="true"></span>
+                  <span>Ready</span>
+                </div>
+              </div>
+
+              <!-- Monospace Sample Output -->
+              <pre class="code-body"><code><span class="code-comment">// SAMPLE OUTPUT (Labeled Example)</span>
+{
+  <span class="code-key">"topic"</span>: <span class="code-str">"Newton's Second Law"</span>,
+  <span class="code-key">"steps"</span>: [
+    <span class="code-str">"1. Identify given variables: mass m = 5 kg, force F = 25 N"</span>,
+    <span class="code-str">"2. Account for friction resistance: f = μ · N = 9.8 N"</span>,
+    <span class="code-str">"3. Solve net acceleration: a = F_net / m = 3.04 m/s²"</span>
+  ],
+  <span class="code-key">"key_points"</span>: [
+    <span class="code-str">"F_net = ma applies when mass is constant"</span>,
+    <span class="code-str">"Force and acceleration share the same direction"</span>
+  ]
+}</code></pre>
             </div>
           </div>
 
         </div>
 
-      </section>
+      </div>
+    </section>
 
-    </div>
+    <!-- Section 5: Features (id="features") -->
+    <section class="section features-section" id="features">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="eyebrow-wrapper">
+            <span class="eyebrow">
+              <span class="eyebrow-line"></span>
+              Capabilities
+            </span>
+          </div>
+          <h2 class="section-headline">Everything a student needs. Nothing they don't.</h2>
+        </div>
+
+        <div class="features-grid">
+          
+          <div class="feature-card">
+            <span class="feature-num">01</span>
+            <h3 class="feature-title">Reads photos and handwriting</h3>
+            <p class="feature-desc">Multimodal vision extracts equations, diagrams, and notes from textbook snapshots.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-num">02</span>
+            <h3 class="feature-title">English and Hindi</h3>
+            <p class="feature-desc">Learn in the language you think in. Full native Devanagari script explanations and terminology.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-num">03</span>
+            <h3 class="feature-title">Step-by-step explanations</h3>
+            <p class="feature-desc">No skipped algebra or mysterious leaps. Every derivation and theorem broken down sequentially.</p>
+          </div>
+
+          <div class="feature-card">
+            <span class="feature-num">04</span>
+            <h3 class="feature-title">Instant quiz with reasons</h3>
+            <p class="feature-desc">5 targeted multiple-choice questions per topic with conceptual explanations for each answer.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 6: Open Source (id="opensource") -->
+    <section class="section opensource-section" id="opensource">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="eyebrow-wrapper">
+            <span class="eyebrow">
+              <span class="eyebrow-line"></span>
+              Open source
+            </span>
+          </div>
+          <h2 class="section-headline">Built on open weights.</h2>
+          <p class="section-subtext">
+            DoubtLens runs on Gemma 4, an open-weights model, and the code is MIT licensed. Run it yourself or contribute.
+          </p>
+        </div>
+
+        <div class="terminal-panel">
+          <div class="terminal-header">
+            <span class="terminal-title">Quickstart commands</span>
+            <button type="button" id="copy-terminal-btn" class="btn-copy-code" aria-label="Copy commands to clipboard">
+              Copy
+            </button>
+          </div>
+          <pre class="terminal-body"><code id="terminal-code">git clone https://github.com/Kaushik-1609/dtu-hackathon-project.git
+pip install -r requirements.txt
+MOCK=1 python app.py</code></pre>
+        </div>
+
+        <div class="opensource-links">
+          <a href="#" class="btn btn-secondary btn-sm">GitHub Repository</a>
+          <a href="#" class="btn btn-secondary btn-sm">Documentation & README</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 7: Final CTA -->
+    <section class="section cta-section">
+      <div class="container cta-container">
+        <h2 class="cta-headline">Got a doubt? Let's clear it.</h2>
+        <div class="cta-actions">
+          <a href="#try" class="btn btn-primary btn-lg">Try it now</a>
+        </div>
+        <p class="cta-note">Free to try. No sign-up.</p>
+      </div>
+    </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
+  <!-- Section 8: Footer -->
+  <footer class="footer">
     <div class="container footer-container">
-      <div class="footer-left">
-        <span class="footer-logo">Doubt<span class="brand-highlight">Lens</span></span>
-        <span class="footer-sep">&bull;</span>
-        <span class="footer-sub">Open-Source Multimodal STEM Assistant</span>
+      
+      <!-- Left Column -->
+      <div class="footer-brand-col">
+        <div class="brand">
+          <span class="brand-name">DoubtLens</span>
+          <span class="brand-tag">AI</span>
+        </div>
+        <p class="footer-desc">
+          A focused multimodal AI learning assistant powered by Google Gemma 4.
+        </p>
+        <p class="footer-team">
+          Built by Mayank, Harsh, Kaushik and Utkarsh
+        </p>
       </div>
-      <div class="footer-center">
-        <span>Built for <strong>Hacktoberfest Delhi &times; SKILLOP DTU</strong> (MLH)</span>
+
+      <!-- Links Columns -->
+      <div class="footer-nav-col">
+        <span class="footer-heading">Product</span>
+        <ul class="footer-links">
+          <li><a href="#try">Try it</a></li>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#features">Features</a></li>
+        </ul>
       </div>
-      <div class="footer-right">
-        <span>Powered by <strong>Gemma 4</strong> via Gemini API</span>
+
+      <div class="footer-nav-col">
+        <span class="footer-heading">Project</span>
+        <ul class="footer-links">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">README</a></li>
+          <li><a href="#">MIT License</a></li>
+        </ul>
       </div>
+
+    </div>
+
+    <!-- Bottom Line -->
+    <div class="container footer-bottom">
+      <span>Built with Gemma 4 &bull; Open source (MIT)</span>
+      <span>Hacktoberfest Delhi &times; SKILLOP DTU (MLH)</span>
     </div>
   </footer>
 
-  <!-- Vanilla Application Logic (No external libraries) -->
-  <script src="/static/app.js" defer></script>
+  <!-- Vanilla Application Logic referenced with Flask url_for -->
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
