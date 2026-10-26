@@ -292,7 +292,54 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 7. EXPLAIN DOUBT FLOW (/api/explain)
+  // ---------------------------------------------------------------------------
+  // 7. RESILIENT API FETCHER (Seamless Live Server 5500 + Flask 5000/5001)
+  // ---------------------------------------------------------------------------
+  async function apiFetch(endpoint, options = {}) {
+    const port = window.location.port;
+    const isStaticDev = window.location.protocol === 'file:' || (port && port !== '5000' && port !== '5001');
+
+    const targets = [];
+    if (!isStaticDev) {
+      targets.push(endpoint);
+    }
+    targets.push(`http://127.0.0.1:5001${endpoint}`);
+    targets.push(`http://127.0.0.1:5000${endpoint}`);
+    targets.push(`http://localhost:5001${endpoint}`);
+    targets.push(`http://localhost:5000${endpoint}`);
+    if (isStaticDev) {
+      targets.push(endpoint);
+    }
+
+    let lastError = null;
+    for (const url of targets) {
+      try {
+        const res = await fetch(url, options);
+        const contentType = res.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const text = await res.text();
+          try {
+            const data = JSON.parse(text);
+            return { response: res, data };
+          } catch {
+            // Static server returned HTML, try next target
+            continue;
+          }
+        }
+        const data = await res.json();
+        return { response: res, data };
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    throw new Error(
+      'Could not connect to DoubtLens server. Please ensure the backend is running (`python app.py`).'
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // EXPLAIN DOUBT FLOW (/api/explain)
   // ---------------------------------------------------------------------------
   async function handleExplainSubmit(e) {
     e.preventDefault();
@@ -333,18 +380,10 @@
     DOM.quizSection.style.display = 'none';
 
     try {
-      // Frozen contract: POST /api/explain, do NOT set Content-Type manually
-      const response = await fetch('/api/explain', {
+      const { response, data } = await apiFetch('/api/explain', {
         method: 'POST',
         body: formData
       });
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (parseErr) {
-        throw new Error('Received an invalid response format from the server.');
-      }
 
       if (!response.ok || (data && data.error)) {
         const errorMsg = (data && data.error) ? data.error : `Server returned status ${response.status}.`;
@@ -362,7 +401,7 @@
       renderExplanation();
 
     } catch (err) {
-      showError(err.message || 'Unable to connect to the DoubtLens service. Please check your network.');
+      showError(err.message || 'Unable to connect to DoubtLens service.');
     } finally {
       DOM.loadingState.style.display = 'none';
       DOM.submitBtn.disabled = false;
@@ -472,7 +511,7 @@
 
     try {
       // Contract: POST /api/quiz with JSON body
-      const response = await fetch('/api/quiz', {
+      const { response, data } = await apiFetch('/api/quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -483,13 +522,6 @@
           language: state.language
         })
       });
-
-      let data;
-      try {
-        data = await response.json();
-      } catch (parseErr) {
-        throw new Error('Received an invalid quiz format from the server.');
-      }
 
       if (!response.ok || (data && data.error)) {
         const errorMsg = (data && data.error) ? data.error : `Quiz request failed with status ${response.status}.`;

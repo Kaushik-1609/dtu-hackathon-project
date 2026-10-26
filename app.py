@@ -244,11 +244,15 @@ def quiz_endpoint():
 
 
 # ---------------------------------------------------------------------------
-# APPLICATION ENTRYPOINT
-# ---------------------------------------------------------------------------
-
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5001))
     debug_mode = os.environ.get("FLASK_DEBUG", "0") == "1"
-    logger.info("Starting DoubtLens backend server on port %s (debug=%s)", port, debug_mode)
-    app.run(host="0.0.0.0", port=port, debug=debug_mode)
+    try:
+        logger.info("Starting DoubtLens backend server on port %s (debug=%s)", port, debug_mode)
+        app.run(host="0.0.0.0", port=port, debug=debug_mode)
+    except OSError as exc:
+        if "Address already in use" in str(exc) and port == 5000:
+            logger.warning("Port 5000 is in use (macOS AirPlay). Falling back to port 5001...")
+            app.run(host="0.0.0.0", port=5001, debug=debug_mode)
+        else:
+            raise
