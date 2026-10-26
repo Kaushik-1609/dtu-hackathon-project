@@ -1,0 +1,32 @@
+{
+  "en": {
+    "topic": "Newton's Second Law of Motion",
+    "explanation": "Newton's Second Law states that the acceleration of an object is directly proportional to the net force acting upon it and inversely proportional to its mass. Mathematically, it is expressed as F_net = m * a. When multiple forces act on a body (such as pulling force and friction), the net force determines how rapidly the velocity changes.",
+    "steps": [
+      "Step 1: Identify all forces acting horizontally: the pulling force F = 20 N (forward) and the kinetic friction force f = 5 N (opposing motion).",
+      "Step 2: Calculate the net horizontal force: F_net = F - f = 20 N - 5 N = 15 N.",
+      "Step 3: Apply Newton's Second Law formula: F_net = m * a, where mass m = 5.0 kg.",
+      "Step 4: Solve for acceleration: a = F_net / m = 15 N / 5.0 kg = 3.0 m/s² in the direction of the pulling force."
+    ],
+    "key_points": [
+      "Net force is the vector sum of all individual forces acting on the object (F_net = F_pull - f_friction).",
+      "Acceleration is always in the direction of the net force, not necessarily the direction of the largest single force.",
+      "Standard SI units: Force in Newtons (N), mass in kilograms (kg), and acceleration in meters per second squared (m/s²)."
+    ]
+  },
+  "hi": {
+    "topic": "न्यूटन का गति का दूसरा नियम (Newton's Second Law)",
+    "explanation": "न्यूटन का दूसरा नियम बताता है कि किसी वस्तु पर लगने वाला कुल बल (Net Force) उसके संवेग परिवर्तन की दर या द्रव्यमान और त्वरण के गुणनफल के बराबर होता है (F_net = m * a)। जब किसी वस्तु पर एक साथ कई बल (जैसे खींचने वाला बल और घर्षण बल) कार्य करते हैं, तो उनका परिणामी बल ही त्वरण उत्पन्न करता है।",
+    "steps": [
+      "चरण 1: क्षैतिज दिशा में कार्य कर रहे सभी बलों की पहचान करें: खींचने वाला बल F = 20 N (आगे की ओर) और घर्षण बल f = 5 N (पीछे की ओर)।",
+      "चरण 2: परिणामी बल (Net Force) की गणना करें: F_net = F - f = 20 N - 5 N = 15 N।",
+      "चरण 3: न्यूटन के दूसरे नियम का सूत्र लागू करें: F_net = m * a, जहाँ द्रव्यमान m = 5.0 kg है।",
+      "चरण 4: त्वरण (a) का मान ज्ञात करें: a = F_net / m = 15 N / 5.0 kg = 3.0 m/s² (खींचने वाले बल की दिशा में)।"
+    ],
+    "key_points": [
+      "परिणामी बल (Net Force) वस्तु पर लगने वाले सभी व्यक्तिगत बलों का सदिश योग होता है।",
+      "त्वरण की दिशा हमेशा परिणामी बल की दिशा में होती है।",
+      "मानक SI इकाइयाँ: बल न्यूटन (N) में, द्रव्यमान किलोग्राम (kg) में, और त्वरण मीटर प्रति वर्ग सेकंड (m/s²) में मापा जाता है।"
+    ]
+  }
+}
