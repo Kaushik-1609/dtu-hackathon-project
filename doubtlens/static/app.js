@@ -676,6 +676,94 @@
   }
 
   // ---------------------------------------------------------------------------
+  // 11. 3D ROTATING ASCII GLYPH SPHERE ANIMATION (Optimus Mathematical Engine)
+  // ---------------------------------------------------------------------------
+  function initHeroAsciiSphere() {
+    const canvas = document.getElementById('hero-ascii-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const glyphs = '░▒▓█▀▄▌▐│─┤├┴┬╭╮╰╯';
+    let angle = 0;
+    let animId = null;
+
+    function handleResize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    function draw() {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const radius = 0.525 * Math.min(rect.width, rect.height);
+
+      ctx.font = '12px monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const points = [];
+
+      for (let theta = 0; theta < 2 * Math.PI; theta += 0.15) {
+        for (let phi = 0; phi < Math.PI; phi += 0.15) {
+          const r = Math.sin(phi) * Math.cos(theta + 0.5 * angle);
+          const s = Math.sin(phi) * Math.sin(theta + 0.5 * angle);
+          const i = Math.cos(phi);
+
+          const u = 0.3 * angle;
+          const m = r * Math.cos(u) - i * Math.sin(u);
+          const p = r * Math.sin(u) + i * Math.cos(u);
+
+          const x = 0.2 * angle;
+          const h = s * Math.cos(x) - p * Math.sin(x);
+          const f = s * Math.sin(x) + p * Math.cos(x);
+
+          const charIdx = Math.floor(((f + 1) / 2) * (glyphs.length - 1));
+
+          points.push({
+            x: centerX + m * radius,
+            y: centerY + h * radius,
+            z: f,
+            char: glyphs[Math.max(0, Math.min(glyphs.length - 1, charIdx))]
+          });
+        }
+      }
+
+      // Back-to-front depth sorting
+      points.sort((a, b) => a.z - b.z);
+
+      // Render glyphs with depth opacity
+      for (let k = 0; k < points.length; k++) {
+        const pt = points[k];
+        const alpha = 0.2 + (pt.z + 1) * 0.4;
+        ctx.fillStyle = `rgba(10, 10, 10, ${alpha.toFixed(3)})`;
+        ctx.fillText(pt.char, pt.x, pt.y);
+      }
+
+      angle += 0.02;
+      animId = requestAnimationFrame(draw);
+    }
+
+    draw();
+  }
+
+  // ---------------------------------------------------------------------------
   // 10. BOOTSTRAP INITIALIZATION
   // ---------------------------------------------------------------------------
   function init() {
@@ -684,6 +772,7 @@
     initSamples();
     initCopy();
     initQuizActions();
+    initHeroAsciiSphere();
 
     if (DOM.form) {
       DOM.form.addEventListener('submit', handleExplainSubmit);
