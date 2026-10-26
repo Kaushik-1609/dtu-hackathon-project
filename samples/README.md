@@ -16,6 +16,7 @@ The following realistic sample images are provided to test the multimodal capabi
 
 > [!NOTE]
 > All sample images are well within the strict **5 MB file size limit** enforced by `/api/explain` and are formatted as standard JPEG files supported by the multimodal API.
+> See **[`PHOTO_COLLECTION_GUIDE.md`](./PHOTO_COLLECTION_GUIDE.md)** for the complete guide to capturing 6 benchmark test photos and expected benchmark outputs across STEM subjects.
 
 ---
 
