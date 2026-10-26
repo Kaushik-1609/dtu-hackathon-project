@@ -1,0 +1,70 @@
+[
+  {
+    "id": "phys_01",
+    "subject": "Physics",
+    "topic": "Newton's Second Law of Motion",
+    "language": "en",
+    "level": "simple",
+    "question": "A 5 kg block is pulled along a flat horizontal surface with a constant force of 20 N. The frictional resistance force opposing the motion is 5 N. What is the acceleration of the block?",
+    "sample_image": "samples/physics_newton_law.jpg"
+  },
+  {
+    "id": "phys_02",
+    "subject": "Physics",
+    "topic": "Newton's Second Law (Hindi)",
+    "language": "hi",
+    "level": "simple",
+    "question": "5 किलोग्राम का एक गुटका 20 न्यूटन के बल से खींचा जा रहा है। यदि घर्षण बल 5 न्यूटन है, तो गुटके का परिणामी बल और त्वरण कितना होगा?",
+    "sample_image": "samples/physics_newton_law.jpg"
+  },
+  {
+    "id": "math_01",
+    "subject": "Mathematics",
+    "topic": "Calculus - Integration by Parts",
+    "language": "en",
+    "level": "detailed",
+    "question": "Evaluate the indefinite integral: ∫ x * e^(2x) dx using integration by parts. Explain the choice of u and dv using the LIATE rule.",
+    "sample_image": "samples/handwritten_calculus.jpg"
+  },
+  {
+    "id": "ee_01",
+    "subject": "Electrical Engineering",
+    "topic": "DC Circuits - Equivalent Resistance & Ohm's Law",
+    "language": "en",
+    "level": "simple",
+    "question": "In a DC circuit with a 12V battery, resistor R1 = 4 Ohms is in series with a parallel combination of R2 = 6 Ohms and R3 = 3 Ohms. Find the total equivalent resistance and the total circuit current.",
+    "sample_image": "samples/circuit_resistors.jpg"
+  },
+  {
+    "id": "chem_01",
+    "subject": "Chemistry",
+    "topic": "Chemical Equilibrium & Le Chatelier's Principle",
+    "language": "en",
+    "level": "simple",
+    "question": "In the Haber-Bosch process for ammonia synthesis: N2(g) + 3H2(g) ⇌ 2NH3(g) (exothermic), how do increasing pressure and decreasing temperature affect the equilibrium yield of ammonia?"
+  },
+  {
+    "id": "chem_02",
+    "subject": "Chemistry",
+    "topic": "रासायनिक संतुलन (Le Chatelier's Principle in Hindi)",
+    "language": "hi",
+    "level": "simple",
+    "question": "ले शातेलिए का नियम क्या है? अमोनिया निर्माण की हैबर विधि में दाब बढ़ाने पर क्या प्रभाव पड़ता है?"
+  },
+  {
+    "id": "cs_01",
+    "subject": "Computer Science",
+    "topic": "Data Structures - Binary Search",
+    "language": "en",
+    "level": "simple",
+    "question": "How does Binary Search work on a sorted array? What are its best-case, average-case, and worst-case time complexities, and why is it O(log n)?"
+  },
+  {
+    "id": "bio_01",
+    "subject": "Biology",
+    "topic": "Cell Biology - Mitochondria & ATP",
+    "language": "hi",
+    "level": "simple",
+    "question": "माइटोकॉन्ड्रिया को कोशिका का 'पावरहाउस' क्यों कहा जाता है? एटीपी (ATP) का निर्माण इसमें कैसे होता है?"
+  }
+]

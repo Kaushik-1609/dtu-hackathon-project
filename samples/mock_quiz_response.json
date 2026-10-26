@@ -1,0 +1,120 @@
+{
+  "en": {
+    "questions": [
+      {
+        "q": "What is the formula representing Newton's Second Law of Motion?",
+        "options": [
+          "F = m / a",
+          "F_net = m * a",
+          "F = m * v",
+          "F = m * a²"
+        ],
+        "answer_index": 1,
+        "why": "Newton's Second Law defines net force as the product of mass and acceleration (F = m * a)."
+      },
+      {
+        "q": "If a 10 kg box is subjected to a net force of 50 N, what will be its acceleration?",
+        "options": [
+          "0.2 m/s²",
+          "500 m/s²",
+          "5 m/s²",
+          "25 m/s²"
+        ],
+        "answer_index": 2,
+        "why": "Using a = F / m: 50 N / 10 kg = 5 m/s²."
+      },
+      {
+        "q": "In which direction does an object accelerate when acted upon by unbalanced forces?",
+        "options": [
+          "Always in the direction of gravity",
+          "In the direction of the net force",
+          "Perpendicular to the applied force",
+          "In the direction of the opposing frictional force"
+        ],
+        "answer_index": 1,
+        "why": "Acceleration is a vector quantity that points directly along the vector direction of the net force."
+      },
+      {
+        "q": "What is the standard SI unit of force?",
+        "options": [
+          "Joule (J)",
+          "Pascal (Pa)",
+          "Newton (N)",
+          "Watt (W)"
+        ],
+        "answer_index": 2,
+        "why": "The Newton (N), equal to 1 kg·m/s², is the standard SI unit of force."
+      },
+      {
+        "q": "A pulling force of 30 N acts forward on a sled, while 10 N of friction resists it. What is the net force?",
+        "options": [
+          "40 N forward",
+          "20 N forward",
+          "300 N backward",
+          "3 N forward"
+        ],
+        "answer_index": 1,
+        "why": "Net force is calculated by subtracting opposing friction: 30 N - 10 N = 20 N forward."
+      }
+    ]
+  },
+  "hi": {
+    "questions": [
+      {
+        "q": "न्यूटन के गति के दूसरे नियम को दर्शाने वाला सही सूत्र कौन सा है?",
+        "options": [
+          "F = m / a",
+          "F_net = m * a",
+          "F = m * v",
+          "F = m * a²"
+        ],
+        "answer_index": 1,
+        "why": "न्यूटन का दूसरा नियम बताता है कि कुल बल द्रव्यमान और त्वरण का गुणनफल होता है (F = m * a)।"
+      },
+      {
+        "q": "यदि 10 kg द्रव्यमान की वस्तु पर 50 N का परिणामी बल लगाया जाए, तो उसका त्वरण क्या होगा?",
+        "options": [
+          "0.2 m/s²",
+          "500 m/s²",
+          "5 m/s²",
+          "25 m/s²"
+        ],
+        "answer_index": 2,
+        "why": "सूत्र a = F / m से: 50 N / 10 kg = 5 m/s²।"
+      },
+      {
+        "q": "असंतुलित बलों के प्रभाव में किसी वस्तु का त्वरण किस दिशा में होता है?",
+        "options": [
+          "सदैव गुरुत्वाकर्षण की दिशा में",
+          "परिणामी बल (Net Force) की दिशा में",
+          "आरोपित बल के लंबवत",
+          "घर्षण बल की दिशा में"
+        ],
+        "answer_index": 1,
+        "why": "त्वरण की दिशा सदैव परिणामी बल की दिशा में ही होती है।"
+      },
+      {
+        "q": "बल का मानक SI मात्रक क्या है?",
+        "options": [
+          "जूल (J)",
+          "पास्कल (Pa)",
+          "न्यूटन (N)",
+          "वाट (W)"
+        ],
+        "answer_index": 2,
+        "why": "बल का अंतर्राष्ट्रीय मानक (SI) मात्रक न्यूटन (N) है।"
+      },
+      {
+        "q": "यदि किसी वस्तु पर 30 N का आगे की ओर बल लगे और 10 N का घर्षण बल पीछे लगे, तो कुल बल कितना होगा?",
+        "options": [
+          "40 N आगे की ओर",
+          "20 N आगे की ओर",
+          "300 N पीछे की ओर",
+          "3 N आगे की ओर"
+        ],
+        "answer_index": 1,
+        "why": "विपरीत दिशा वाले घर्षण को घटाने पर: 30 N - 10 N = 20 N आगे की ओर।"
+      }
+    ]
+  }
+}
