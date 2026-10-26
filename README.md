@@ -1,88 +1,121 @@
 # DoubtLens 🔍⚡
 
-> **Instant Multimodal Doubt Solving & Mastery Testing Powered by Google Gemma 4**  
-> *Built in 3 hours for Hacktoberfest Hack Day Delhi × SKILLOP DTU (MLH)*
+> **Snap your doubt. Understand it. Test yourself.**  
+> *Built for Hacktoberfest Hack Day Delhi × SKILLOP DTU (MLH)*
 
 [![Hackathon: MLH](https://img.shields.io/badge/Hackathon-MLH%20%C3%97%20Hacktoberfest-ff4088?style=flat-square)](https://mlh.io)
 [![Model: Gemma 4](https://img.shields.io/badge/Model-Gemma%204%20(31B--IT)-4285F4?style=flat-square&logo=google)](https://ai.google.dev/gemma)
 [![Python: 3.11](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Backend: Flask](https://img.shields.io/badge/Backend-Flask-000000?style=flat-square&logo=flask)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](CONTRIBUTING.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square)](#-contributing--hacktoberfest)
 
 ---
 
-## 🎯 Target Hackathon Prizes
+<!-- LIVE DEMO URL PLACEHOLDER -->
+> 🌐 **Live Demo URL**: `https://doubtlens.onrender.com` *(Replace with deployed URL)*
 
-1. **🏆 Best Use of Gemma 4**
-   - **True Multimodality**: Deep visual reasoning over handwritten equations, complex physics/chemistry diagrams, and dense textbook pages via the Gemini API (`google-genai`).
-   - **Bilingual Step-by-Step Pedagogy**: High-fidelity structured explanations in both **English** and **Hindi**, making STEM education accessible to millions of vernacular learners.
-   - **Dual Explanation Depth**: Dynamic `simple` (intuitive conceptual grasp) and `detailed` (rigorous derivations and edge cases) modes.
-   - **Interactive Mastery Loop ("Test Me")**: Synthesizes a focused 5-question diagnostic multiple-choice quiz directly from the analyzed concept, providing instant pedagogical reinforcement with rationale breakdowns.
-
-2. **🌟 Best Open-Source AI Project**
-   - **Zero Vendor Lock-in & Lightweight**: Pure Vanilla HTML/CSS/JS frontend with zero bloated npm dependencies. Highly responsive and blisteringly fast.
-   - **Reproducible & Containerized**: Ready-to-deploy Docker runtime, Gunicorn production server, and frozen API specifications.
-   - **Zero-Barrier Evaluation (Mock Mode)**: Integrated mock engine (`MOCK=1`) allowing offline evaluation, continuous testing, and judge demonstrations with zero API key configuration.
-
----
-
-## 💡 The Problem & The Solution
-
-- **The Problem**: Students worldwide spend hours stuck on homework, textbook problems, and handwritten lecture notes. Existing tools either provide raw answers without understanding, lack visual comprehension for diagrams and equations, or fail to explain concepts in vernacular languages like Hindi.
-- **The Solution**: **DoubtLens** transforms any camera or screenshot into an interactive AI tutor. Simply snap a picture or type your question. Gemma 4 deconstructs the problem step-by-step, highlights key takeaways, and generates an on-the-spot mastery quiz to verify student understanding.
-
----
-
-## 🏗️ System Architecture & Tech Stack
-
+<!-- APP SCREENSHOT PLACEHOLDER -->
 ```
-                     ┌───────────────────────────────────────────────┐
-                     │          Browser Client (Vanilla Web)         │
-                     │  - Pure HTML5 / CSS3 / Vanilla JavaScript     │
-                     │  - Zero Frameworks, Zero NPM Dependencies     │
-                     └───────────────────────┬───────────────────────┘
-                                             │  HTTP (Same-Origin)
-                                             ▼
-                     ┌───────────────────────────────────────────────┐
-                     │            Flask API Gateway (3.11)           │
-                     │  - Input Validation (Max 5MB PNG/JPG/WebP)    │
-                     │  - Language Routing (English / Hindi)         │
-                     │  - Mock Fallback Engine (MOCK=1)              │
-                     └───────────────────────┬───────────────────────┘
-                                             │
-                       ┌─────────────────────┴─────────────────────┐
-                       │ (MOCK=0)                                  │ (MOCK=1)
-                       ▼                                           ▼
-         ┌───────────────────────────┐               ┌───────────────────────────┐
-         │       Gemma 4 Client      │               │   Mock Pedagogical Data   │
-         │ - google-genai SDK        │               │ - Newton's Second Law     │
-         │ - Model: gemma-4-31b-it   │               │ - Deterministic 5Q Quiz   │
-         │ - Multimodal Vision + Text│               │ - Offline Resilience      │
-         └───────────────────────────┘               └───────────────────────────┘
++-------------------------------------------------------------------------------+
+|                            [ SCREENSHOT PLACEHOLDER ]                         |
+|   Upload photo / diagram  ->  Step-by-step explanation  ->  "Test Me" Quiz     |
+|                   ![DoubtLens Application Screenshot](docs/screenshot.png)   |
++-------------------------------------------------------------------------------+
 ```
 
-- **Backend**: Python 3.11, Flask, `flask-cors`, `google-genai`, `python-dotenv`, `gunicorn`
-- **Frontend**: Plain HTML5, CSS3, Modern ES6+ JavaScript, Google Fonts (Outfit / Inter)
-- **AI Engine**: Google Gemma 4 (`gemma-4-31b-it`) via Google Gemini API
-- **DevOps**: Docker (`python:3.11-slim`), Procfile (Heroku / Render / Railway)
+---
+
+## 💡 Problem
+
+Students frequently get stuck while solving complex problems from textbooks, handwritten notes, lecture slides, or diagrams. Existing search tools and generic chatbots often fail in critical ways:
+- **No visual comprehension**: Inability to interpret handwritten math, circuit diagrams, chemical structures, or geometry figures.
+- **Answer dumps without pedagogical reasoning**: Giving the final answer directly instead of teaching how to solve it step by step.
+- **Language barriers**: High-quality STEM explanations are rarely available in vernacular languages like Hindi.
+- **No retention check**: Students read an explanation passively but have no immediate way to test if they actually grasped the core concept.
 
 ---
 
-## 👥 4-Person Hackathon Team Ownership
+## ✨ Features
 
-| Teammate | Focus Area | Owned Files |
-| :--- | :--- | :--- |
-| **Mayank** | Core Backend & AI Integration | `doubtlens/app.py`, `doubtlens/gemma_client.py` |
-| **Harsh** | Frontend UI & User Experience | `doubtlens/templates/index.html`, `doubtlens/static/style.css`, `doubtlens/static/app.js` |
-| **Kaushik** | DevOps, Tooling & Infrastructure | `requirements.txt`, `.env.example`, `.gitignore`, `Dockerfile`, `Procfile`, `README.md`, `LICENSE` |
-| **Utkarsh** | Test Assets & Documentation | `doubtlens/samples/*`, `doubtlens/docs/*` |
+- 📸 **Multimodal Input**: Upload a photo of a textbook page, handwritten calculation, or diagram (PNG, JPG, WebP up to 5 MB), or type any question directly.
+- 🪜 **Step-by-Step Breakdown**: Deconstructs every problem into numbered, intuitive logical steps with highlighted key takeaways.
+- 🌐 **Bilingual Explanations**: Seamless switching between **English** and **Hindi** (`language: "en" | "hi"`).
+- 🎚️ **Dual Depth Modes**: Choose between `simple` (intuitive intuition-first summary) and `detailed` (rigorous derivations and edge cases).
+- 🧠 **"Test Me" Mastery Quiz**: One-click generation of a diagnostic 5-question multiple-choice quiz derived from the specific doubt, complete with immediate answer checking and explanations (`why`).
+- ⚡ **Zero-Bloat Frontend**: Handcrafted Vanilla HTML/CSS/JS with zero client-side frameworks or heavy npm dependencies. Blazing fast on mobile and low-bandwidth connections.
+- 🧪 **Offline Mock Engine**: Set `MOCK=1` to test the entire application locally or demonstrate during hackathon judging with zero API key configuration.
 
 ---
 
-## 📡 Frozen API Specification
+## 🤖 How Gemma 4 is Used
 
-Frontend and backend communicate via relative paths on the same origin.
+DoubtLens targets the **Best Use of Gemma 4** prize category by making Gemma 4 the cognitive core of the learning loop:
+
+1. **Multimodal Visual Reasoning**: Gemma 4 natively inspects uploaded textbook pages, handwritten scratch work, and scientific diagrams alongside the user's typed question via Google's `google-genai` SDK.
+2. **Pedagogical Explanation Generation**: Using tailored system instructions, Gemma 4 structures explanations into a concise topic summary, sequential steps, and core retention points in either English or Hindi.
+3. **Structured Diagnostic Quiz Generation**: When the student clicks "Test Me", Gemma 4 synthesizes exactly 5 multiple-choice questions specifically targeting misconceptions related to that exact topic, providing 4 options, the correct answer index, and a pedagogical "why" explanation.
+4. **Configurable Model Name (Cloud or Self-Hosted)**: The model is configurable via the `GEMMA_MODEL` environment variable (defaults to `gemma-4-31b-it`). This allows DoubtLens to run seamlessly against Google Gemini API or against a self-hosted Gemma 4 instance (e.g. via vLLM or Ollama with an OpenAI-compatible gateway) without any code modifications.
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    User([Student / Learner]) -->|Upload Image + Question| WebUI[Frontend: Vanilla HTML / CSS / JS]
+    WebUI -->|POST /api/explain| FlaskAPI[Flask API Gateway Python 3.11]
+    
+    FlaskAPI -->|Check MOCK Flag| Router{MOCK == 1?}
+    
+    Router -->|Yes: Offline Demo| MockService[Mock Engine: Newton's Second Law]
+    Router -->|No: Live Inference| GemmaClient[Gemma 4 Client google-genai]
+    
+    GemmaClient -->|Multimodal Prompt| GemmaModel[Google Gemma 4 gemma-4-31b-it]
+    GemmaModel -->|Structured JSON| GemmaClient
+    
+    MockService -->|JSON Response| FlaskAPI
+    GemmaClient -->|JSON Response| FlaskAPI
+    FlaskAPI -->|Topic + Steps + Key Points| WebUI
+    
+    WebUI -->|Click 'Test Me' POST /api/quiz| FlaskAPI
+    FlaskAPI -->|Generate 5-Question MCQs| RouterQuiz{MOCK == 1?}
+    RouterQuiz -->|Yes| MockQuiz[Mock Quiz Data]
+    RouterQuiz -->|No| GemmaModel
+    MockQuiz -->|5 MCQs + Answers + Why| WebUI
+    GemmaModel -->|5 MCQs + Answers + Why| WebUI
+```
+
+---
+
+## ⚡ Local Setup (Under 6 Commands)
+
+Get DoubtLens running locally in 5 simple commands:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/Kaushik-1609/dtu-hackathon-project.git && cd dtu-hackathon-project
+
+# 2. Create and activate a Python 3.11 virtual environment
+python3 -m venv venv && source venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Copy template environment file
+cp .env.example .env
+
+# 5. Run the application (runs on http://localhost:5000)
+python app.py
+```
+
+> **Tip for Instant Testing**: Set `MOCK=1` in `.env` to test the complete UI and quiz flow immediately without providing a Gemini API key! To use live Gemma 4, set `MOCK=0` and add your `GEMINI_API_KEY`.
+
+---
+
+## 📡 API Documentation
+
+Frontend and backend communicate using same-origin relative URLs.
 
 ### 1. Health Check
 ```http
@@ -95,201 +128,212 @@ GET /api/health
 }
 ```
 
----
-
-### 2. Explain Problem / Concept
+### 2. Explain Concept / Problem
 ```http
 POST /api/explain
 Content-Type: multipart/form-data
 ```
+**Form Fields:**
+- `image` *(file, optional)*: Image file (`png`, `jpg`, `jpeg`, `webp`, max 5 MB).
+- `question` *(text, optional)*: Typed problem text or doubt context.
+  *(At least one of `image` or `question` is required)*.
+- `language` *(text, optional)*: `"en"` (default) or `"hi"`.
+- `level` *(text, optional)*: `"simple"` (default) or `"detailed"`.
 
-**Request Parameters:**
-| Field | Type | Required | Description |
-| :--- | :--- | :--- | :--- |
-| `image` | File | Optional* | Image file (`png`, `jpg`, `jpeg`, `webp`). Max 5 MB. |
-| `question` | Text | Optional* | Typed doubt, prompt, or question context. |
-| `language` | Text | Optional | `"en"` (default) or `"hi"` (Hindi). |
-| `level` | Text | Optional | `"simple"` (default) or `"detailed"`. |
-
-*\* At least one of `image` or `question` is required.*
-
-**Success Response (200 OK):**
+**Response (200 OK):**
 ```json
 {
   "topic": "Newton's Second Law of Motion",
   "explanation": "Newton's Second Law describes how the velocity of an object changes when it is subjected to an external force...",
   "steps": [
     "Step 1: Identify given forces and mass.",
-    "Step 2: Formulate F_net = m * a.",
+    "Step 2: Formulate F = m * a.",
     "Step 3: Resolve vector components along the axis of acceleration.",
-    "Step 4: Solve for the target variable."
+    "Step 4: Solve for the unknown acceleration."
   ],
   "key_points": [
     "Force is directly proportional to acceleration.",
-    "Mass represents inertial resistance to acceleration.",
-    "SI Unit of Force is the Newton (1 N = 1 kg·m/s²)."
+    "Mass resists changes in acceleration.",
+    "SI unit of force is the Newton (N = kg*m/s^2)."
   ]
 }
 ```
-
----
 
 ### 3. Generate Mastery Quiz
 ```http
 POST /api/quiz
 Content-Type: application/json
 ```
-
 **Request Body:**
 ```json
 {
   "topic": "Newton's Second Law of Motion",
-  "explanation": "Newton's Second Law describes how the velocity of an object changes...",
+  "explanation": "Newton's Second Law describes how the velocity...",
   "language": "en"
 }
 ```
-
-**Success Response (200 OK):**
+**Response (200 OK):**
 ```json
 {
   "questions": [
     {
-      "q": "What happens to the acceleration of an object if the applied net force is doubled while mass remains constant?",
+      "q": "What happens to acceleration if net force is doubled and mass remains constant?",
       "options": [
         "Acceleration is halved",
         "Acceleration is doubled",
-        "Acceleration remains unchanged",
+        "Acceleration remains the same",
         "Acceleration quadruples"
       ],
       "answer_index": 1,
-      "why": "According to F = ma, acceleration is directly proportional to net force for a constant mass."
+      "why": "According to F = ma, acceleration is directly proportional to force."
     }
-    // Exactly 5 structured questions
   ]
 }
 ```
 
----
-
-### 4. Standardized Error Format
-All endpoints return standard JSON errors:
+### Standard Error Format
+All endpoints return consistent JSON error objects on failure:
 ```json
 {
-  "error": "Human readable description of the error"
+  "error": "Human readable error description"
 }
 ```
-- `400 Bad Request`: Missing both image and question, or malformed JSON payload.
+- `400 Bad Request`: Neither image nor question provided, or invalid JSON payload.
 - `413 Payload Too Large`: Uploaded image exceeds 5 MB.
 - `500 Internal Server Error`: AI inference or server failure.
 
 ---
 
-## 🚀 Quick Start Guide
+## 📁 Project Structure
 
-### Prerequisites
-- Python 3.11 installed
-- Git
-- Google Gemini API Key ([Get one here](https://aistudio.google.com/)) *(Optional if running in Mock mode)*
-
-### 1. Clone & Set Up Environment
-
-```bash
-# Clone the repository
-git clone https://github.com/Kaushik-1609/dtu-hackathon-project.git
-cd dtu-hackathon-project
-
-# Create and activate a Python 3.11 virtual environment
-python3.11 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies (strictly restricted to authorized stack)
-pip install -r requirements.txt
 ```
-
-### 2. Configure Environment Variables
-
-```bash
-# Copy template configuration
-cp .env.example .env
-```
-
-Edit `.env` to configure your settings:
-```ini
-GEMINI_API_KEY=your_actual_api_key_here
-GEMMA_MODEL=gemma-4-31b-it
-PORT=5000
-MOCK=1  # Set to 0 to use live Gemma 4 model
-```
-
-### 3. Run the Application
-
-#### Option A: Local Development Server
-```bash
-python app.py
-```
-Visit `http://localhost:5000` in your browser.
-
-#### Option B: Production Server with Gunicorn
-```bash
-gunicorn --bind 0.0.0.0:5000 --workers 2 --threads 4 app:app
+doubtlens/
+├── app.py                     # Flask application & route handlers (Mayank)
+├── gemma_client.py            # Gemma 4 multimodal client & prompts (Mayank)
+├── templates/
+│   └── index.html             # Clean, responsive HTML UI (Harsh)
+├── static/
+│   ├── style.css              # Custom responsive stylesheet (Harsh)
+│   └── app.js                 # Frontend interactions & API bindings (Harsh)
+├── requirements.txt           # Python dependencies (Kaushik)
+├── .env.example               # Template environment configuration (Kaushik)
+├── .gitignore                 # Secrets, bytecode & venv exclusions (Kaushik)
+├── Dockerfile                 # Python 3.11 container specification (Kaushik)
+├── Procfile                   # Cloud web process entrypoint (Kaushik)
+├── README.md                  # Complete project documentation (Kaushik)
+├── LICENSE                    # Permissive MIT License (Kaushik)
+├── samples/                   # Sample problem images & questions (Utkarsh)
+│   └── .gitkeep
+└── docs/                      # Technical references & architecture docs (Utkarsh)
+    └── .gitkeep
 ```
 
 ---
 
-## 🐳 Docker Deployment
+## 🚀 Step-by-Step Cloud Deployment
 
-DoubtLens includes an optimized multi-stage container configuration based on `python:3.11-slim`:
+### A. Deploy on Render (Recommended)
 
-```bash
-# Build Docker image
-docker build -t doubtlens:latest .
-
-# Run container (Mock mode enabled by default)
-docker run -d -p 5000:5000 --name doubtlens-app doubtlens:latest
-
-# Or run with live Gemini API Key
-docker run -d -p 5000:5000 \
-  -e GEMINI_API_KEY="your_api_key_here" \
-  -e MOCK=0 \
-  --name doubtlens-live doubtlens:latest
-```
-
-Check container health:
-```bash
-curl http://localhost:5000/api/health
-```
-
----
-
-## 🧪 Mock Mode for Demos & Testing
-
-When running with `MOCK=1`:
-- `/api/explain` immediately returns a complete explanation of **Newton's Second Law** (with step-by-step breakdown and key points, automatically translated if `language=hi`).
-- `/api/quiz` immediately returns 5 realistic, validated diagnostic questions with answer indices and pedagogical rationale.
-- Perfect for judging environments, rapid frontend testing, and quota conservation!
+1. **Create a New Web Service**:
+   - Go to the [Render Dashboard](https://dashboard.render.com/) and click **New + > Web Service**.
+   - Connect your GitHub repository: `https://github.com/Kaushik-1609/dtu-hackathon-project`.
+2. **Configure Settings**:
+   - **Name**: `doubtlens`
+   - **Environment**: `Python 3`
+   - **Region**: Closest to your users (e.g., Singapore or Frankfurt)
+   - **Branch**: `main` (or your active branch `hkg-kaushik`)
+   - **Build Command**:
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - **Start Command**:
+     ```bash
+     gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120
+     ```
+3. **Add Environment Variables**:
+   In the **Environment** tab on the Render service dashboard, click **Add Environment Variable**:
+   - `GEMINI_API_KEY` = `your_actual_gemini_api_key` *(or leave blank if running in Mock mode)*
+   - `GEMMA_MODEL` = `gemma-4-31b-it`
+   - `PORT` = `5000` *(Render will automatically override $PORT dynamically)*
+   - `MOCK` = `0` *(or `1` for demo mode without API keys)*
+4. **Deploy**:
+   - Click **Create Web Service**. Render will install dependencies, launch Gunicorn, and expose your live URL!
 
 ---
 
-## 🛡️ Security & Open-Source Best Practices
+### B. Alternative: Deploy on DigitalOcean App Platform
 
-- **Strict Secret Management**: `.env` is explicitly ignored in `.gitignore`. Secrets are never committed or logged.
-- **Payload Validation**: Strict MIME-type checking and 5 MB cap on image uploads.
-- **Least-Privilege Docker**: Container executes under a dedicated non-root `doubtlens` user.
-- **MIT License**: Completely open-source and permissible for community expansion.
+1. In the [DigitalOcean Cloud Console](https://cloud.digitalocean.com/apps), click **Create App** and select **GitHub**.
+2. Select repository `Kaushik-1609/dtu-hackathon-project` and branch `main`.
+3. Set the **Component Type** to **Web Service**:
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Run Command**: `gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120`
+   - **HTTP Port**: `5000`
+4. Under **Environment Variables**, add:
+   - `GEMINI_API_KEY`: *(encrypt as Secret)*
+   - `GEMMA_MODEL`: `gemma-4-31b-it`
+   - `MOCK`: `0`
+5. Click **Next** and **Create Resources**.
 
 ---
 
-## 🤝 Contributing (Hacktoberfest)
+## 🗺️ Roadmap
 
-Contributions are warmly welcomed! Please adhere to our guidelines:
-1. Fork the repo and create your feature branch: `git checkout -b feature/awesome-feature`
-2. Follow PEP 8 guidelines for Python code.
-3. Keep frontend lightweight with zero external npm dependencies.
-4. Ensure all frozen API contracts remain backwards-compatible.
-5. Open a Pull Request with a clear description of your changes.
+- [ ] **Vernacular Expansion**: Expand explanation and quiz generation to Tamil, Telugu, Bengali, Marathi, and Punjabi.
+- [ ] **Flashcards & Anki Export**: One-click export of key points and quiz questions directly to downloadable `.apkg` flashcards.
+- [ ] **Student Mastery Tracking**: LocalStorage-based dashboard tracking weak topics, quiz accuracy scores, and spaced repetition reminders.
+- [ ] **Equation LaTeX Rendering**: Native lightweight KaTeX rendering for complex mathematical notation.
+
+---
+
+## 👥 Hackathon Team Ownership
+
+Built with passion in 3 hours by:
+
+| Member | Role | Primary Responsibility |
+| :--- | :--- | :--- |
+| **Mayank** | AI & Backend Lead | Flask endpoints (`app.py`), Gemma 4 multimodal client (`gemma_client.py`) |
+| **Harsh** | Frontend Lead | User interface (`index.html`), styles (`style.css`), interactions (`app.js`) |
+| **Kaushik** | DevOps & Architecture | `requirements.txt`, `.env.example`, `Dockerfile`, `Procfile`, `README.md`, `LICENSE` |
+| **Utkarsh** | QA & Documentation | Test problem sets (`samples/*`), technical documentation (`docs/*`) |
+
+---
+
+## 🤝 Contributing & Hacktoberfest
+
+Contributions are warmly welcomed for Hacktoberfest!
+
+1. Fork the repo and create your branch: `git checkout -b feature/your-feature-name`
+2. Keep code simple, clean, and well-commented.
+3. Adhere to our zero-frontend-framework policy (pure Vanilla HTML/CSS/JS).
+4. Verify tests pass and frozen API contracts are maintained.
+5. Submit a descriptive Pull Request!
+
+Check out our documentation files in [docs/](docs/) for deep dives.
+
+---
+
+## 🏷️ 5 "Good First Issue" Ideas for Contributors
+
+Looking to make your first Hacktoberfest contribution? Here are 5 beginner-friendly issues ready to be implemented:
+
+1. **`good first issue` #1: Add Dark / Light Mode Toggle**  
+   *Description*: Implement a clean theme switch in `static/style.css` and `static/app.js` using CSS variables and persist the user's preference in `localStorage`.
+
+2. **`good first issue` #2: Drag-and-Drop Image Upload Zone**  
+   *Description*: Enhance the image upload area in `index.html` with a visual drag-and-drop zone that highlights on dragover and previews the selected image thumbnail.
+
+3. **`good first issue` #3: One-Click Copy Explanation to Clipboard**  
+   *Description*: Add a "Copy Explanation" button next to the explanation cards that copies formatted markdown/text to the clipboard with a subtle "Copied!" tooltip.
+
+4. **`good first issue` #4: Export Quiz & Summary to Printable PDF / Markdown**  
+   *Description*: Add an export action that generates a clean, printable study sheet with the topic explanation, key points, and quiz questions.
+
+5. **`good first issue` #5: Quick-Start Example Doubt Buttons**  
+   *Description*: Add 3 clickable pill buttons below the input box (e.g. *"Newton's 2nd Law"*, *"Photosynthesis Reaction"*, *"Ohm's Law"*) that pre-populate the question for immediate one-click testing.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is open-source software licensed under the **[MIT License](LICENSE)**.
